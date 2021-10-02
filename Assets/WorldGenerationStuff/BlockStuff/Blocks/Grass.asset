@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35c55e30db735a24fa398f5a1d977b29, type: 3}
+  m_Name: Grass
+  m_EditorClassIdentifier: 
+  id: 1
+  name: Grass
+  negXFaceUvs:
+  - {x: 0.0078125, y: 0.0078125}
+  - {x: 0.0078125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.0078125}
+  xFaceUvs:
+  - {x: 0.0078125, y: 0.0078125}
+  - {x: 0.0078125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.0078125}
+  negYFaceUvs:
+  - {x: 0.1484375, y: 0.0078125}
+  - {x: 0.1484375, y: 0.1328125}
+  - {x: 0.2734375, y: 0.1328125}
+  - {x: 0.2734375, y: 0.0078125}
+  yFaceUvs:
+  - {x: 0.2890625, y: 0.0078125}
+  - {x: 0.2890625, y: 0.1328125}
+  - {x: 0.4140625, y: 0.1328125}
+  - {x: 0.4140625, y: 0.0078125}
+  negZFaceUvs:
+  - {x: 0.0078125, y: 0.0078125}
+  - {x: 0.0078125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.0078125}
+  zFaceUvs:
+  - {x: 0.0078125, y: 0.0078125}
+  - {x: 0.0078125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.0078125}
+  negXFaceAtlasIndex: {x: 0, y: 0}
+  xFaceAtlasIndex: {x: 0, y: 0}
+  negYFaceAtlasIndex: {x: 2, y: 0}
+  yFaceAtlasIndex: {x: 1, y: 0}
+  negZFaceAtlasIndex: {x: 0, y: 0}
+  zFaceAtlasIndex: {x: 0, y: 0}
