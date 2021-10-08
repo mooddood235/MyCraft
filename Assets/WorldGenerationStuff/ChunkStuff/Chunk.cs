@@ -12,7 +12,9 @@ public class Chunk
     private Vector2Int pos;
     private GameObject chunkObj = null;
     private int[,,] blocks = new int[dims.x, dims.y, dims.z];
-    private Mesh mesh = new Mesh();
+    private MeshData meshData = new MeshData();
+    private Mesh mesh;
+    private bool meshGenerated = false;
     private bool generated = false;
     private Biome targetBiome;
     public static readonly Vector2 offsetToSouthWestCorner = new Vector2((dims.x - 1f) / 2f + 0.5f, (dims.z - 1f) / 2f + 0.5f);
@@ -117,10 +119,9 @@ public class Chunk
                }
             }
         }
-        mesh.vertices = verts.ToArray();
-        mesh.triangles = tris.ToArray();
-        mesh.uv = uvs.ToArray();
-        mesh.RecalculateNormals();
+        meshData.vertices = verts.ToArray();
+        meshData.triangles = tris.ToArray();
+        meshData.uv = uvs.ToArray();
     }
     
     private void SetTargetBiome()
@@ -195,6 +196,17 @@ public class Chunk
     public Mesh GetMesh()
     {
         return mesh;
+    }
+
+    public void SetMeshFromMeshData()
+    {
+        meshGenerated = true;
+        mesh = meshData.GetMesh();
+    }
+
+    public bool meshIsGenerated()
+    {
+        return meshGenerated;
     }
 
     public bool isGenerated()

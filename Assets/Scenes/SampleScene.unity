@@ -188,7 +188,7 @@ MonoBehaviour:
   viewRadius: 10
   playerTran: {fileID: 5303011150828113892}
   chunkObjPrefab: {fileID: 1909839266076490692, guid: b6498240cafa6424c9df2024ceb3a3f9, type: 3}
-  timeBetweenChunkSpawning: 0.02
+  timeBetweenChunkSpawning: 0.1
 --- !u!114 &178367342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,11 +356,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8526540949102607362, guid: ceeb9742ae2f50a4990f36f508d074fd, type: 3}
       propertyPath: jumpForce
-      value: 0.1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8526540949102607362, guid: ceeb9742ae2f50a4990f36f508d074fd, type: 3}
       propertyPath: jumpHeight
       value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526540949102607362, guid: ceeb9742ae2f50a4990f36f508d074fd, type: 3}
+      propertyPath: gravityAcceleration
+      value: -39.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ceeb9742ae2f50a4990f36f508d074fd, type: 3}

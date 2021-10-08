@@ -52,7 +52,7 @@ public class KeyBoardController : MonoBehaviour
     {
         if (!isGrounded)
         {
-            yVelocity += Vector3.up * gravityAcceleration * Time.deltaTime;
+            yVelocity += Vector3.up * gravityAcceleration * Time.deltaTime * Time.deltaTime;
         }
     }
     private void ResetYVelocity()

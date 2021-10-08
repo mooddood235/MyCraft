@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
+
 
 public class WorldGenerator2 : MonoBehaviour
 {
@@ -18,36 +20,43 @@ public class WorldGenerator2 : MonoBehaviour
     private Queue<GameObject> chunkObjPool = new Queue<GameObject>();
     [SerializeField]
     private float timeBetweenChunkSpawning = 0.05f;
-    private bool doneDespawning = true;
-    private bool doneSpawning = true;
+    private bool despawning = false;
+    private bool spawning = false;
+    Thread generatorThread;
+    private bool generating = true;
 
     private void Start()
     {
-        SpawnFirstChunks();
+        SpawnFirstChunks();    
     }
 
 
     private void Update()
     {
-        playerPosInChunkSpace = GetPlayerPosInChunkSpace();
-
-        if (doneDespawning && doneSpawning && playerPosInChunkSpace != previousPlayerPosInChunkSpace)
+        playerPosInChunkSpace = GetPlayerPosInChunkSpace();  
+        
+        if (!despawning && !spawning && playerPosInChunkSpace != previousPlayerPosInChunkSpace)
         {
-            doneDespawning = false;
-            doneSpawning = false;
+            chunksToDespawn = new List<Chunk>();
+            chunksToSpawn = new List<Chunk>();
+
+            despawning = true;
+            spawning = true;
 
             GetChunksToDespawn();
             GetChunksToSpawn();
 
-            StartCoroutine( GenerateChunks() );
-
-            StartCoroutine( DespawnChunks() );
-            StartCoroutine( SpawnChunks() );
+            generatorThread = new Thread(GenerateChunks);
+            generatorThread.Start();
 
             previousPlayerPosInChunkSpace = playerPosInChunkSpace;
+        }
+        if (!generating)
+        {
+            generating = true;
 
-            chunksToDespawn = new List<Chunk>();
-            chunksToSpawn = new List<Chunk>();
+            StartCoroutine(DespawnChunks());
+            StartCoroutine(SpawnChunks());
         }
     }
 
@@ -65,16 +74,16 @@ public class WorldGenerator2 : MonoBehaviour
         }
     }
 
-    private IEnumerator GenerateChunks()
+    private void GenerateChunks()
     {
         foreach (Chunk chunk in chunksToSpawn)
         {
             if (!chunk.isGenerated())
             {
                 chunk.Generate(chunks);
-                yield return new WaitForSeconds(timeBetweenChunkSpawning);
             }
         }
+        generating = false;
     }
 
 
@@ -91,7 +100,7 @@ public class WorldGenerator2 : MonoBehaviour
             SpawnChunk(chunk);
             yield return new WaitForSeconds(timeBetweenChunkSpawning);
         }
-        doneSpawning = true;
+        spawning = false;
     }
 
     private void SpawnChunk(Chunk chunk)
@@ -110,6 +119,8 @@ public class WorldGenerator2 : MonoBehaviour
             chunkObj.SetActive(true);
         }
 
+        if (!chunk.meshIsGenerated()) chunk.SetMeshFromMeshData();
+
         chunkObj.GetComponent<MeshFilter>().mesh = chunk.GetMesh();
         chunkObj.GetComponent<MeshCollider>().sharedMesh = chunk.GetMesh();
         chunk.SetChunkObj(chunkObj);
@@ -122,7 +133,7 @@ public class WorldGenerator2 : MonoBehaviour
             DespawnChunk(chunk);
             yield return new WaitForSeconds(timeBetweenChunkSpawning);
         }
-        doneDespawning = true;
+        despawning = false;
     }
 
     private void DespawnChunk(Chunk chunk)
