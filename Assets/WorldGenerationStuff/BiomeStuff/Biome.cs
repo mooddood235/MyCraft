@@ -2,31 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName="ScriptableObjects", menuName="ScriptableObjects/BiomeObj")]
-public class Biome : ScriptableObject
+public abstract class Biome
 {
-    #region staticAttributes
     public static FastNoiseLite biomeNoise = new FastNoiseLite();
-    public static Dictionary<Vector2, Biome> boundToBiome = new Dictionary<Vector2, Biome>();
+    public static Dictionary<Vector2, Biome> boundToBiome = new Dictionary<Vector2, Biome>()
+    {
+        { new Vector2(-1f, 0f), new Forest() },
+        { new Vector2 (0f, 1f), new StoneLand() }
+    };
     public static Vector2 boundWithSmallestMin = new Vector2(Mathf.Infinity, 0);
     public static Vector2 boundWithGreatestMax = new Vector2(0, Mathf.NegativeInfinity);
-    #endregion
-
-    public Vector2 biomeNoiseBounds;
-    public FastNoiseLite.NoiseType elevationNoiseType;
-    public float elevationNoiseFrequency;
-    public float elevationNoiseAmplitude;
-    public FastNoiseLite elevationNoise = new FastNoiseLite();
-    public string block;
     private static int lerpRange = 4;
 
-    public static Biome GetBiome(Vector3 blockPos, Vector2Int chunkPos)
+    public static Biome GetBiome(Vector2Int chunkPos, Vector3 blockPos)
     {
         Vector2Int chunkPosInWorldSpace = chunkPos * Chunk.dims.x;
         Vector2 blockPosInWorldSpace = chunkPosInWorldSpace + new Vector2(blockPos.x, blockPos.z);
 
         float biomeNoiseValue = biomeNoise.GetNoise(blockPosInWorldSpace.x, blockPosInWorldSpace.y);
- 
+
         foreach (Vector2 bound in boundToBiome.Keys)
         {
             if (bound.x <= biomeNoiseValue && biomeNoiseValue <= bound.y)
@@ -35,15 +29,16 @@ public class Biome : ScriptableObject
             }
         }
         if (biomeNoiseValue >= boundWithGreatestMax.y) return boundToBiome[boundWithGreatestMax];
-        else return boundToBiome[boundWithSmallestMin];   
+        else return boundToBiome[boundWithSmallestMin];
     }
-    public static int GetElevation(Vector2Int blockPos, Chunk chunk, Dictionary<Vector2Int, Chunk> chunks)
+
+    protected static int GetLerpedElevation(Vector2Int blockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks)
     {
-        Vector2Int blockPosInWorldSpace = chunk.GetPos() * Chunk.dims.x + blockPos;
+        Vector2Int blockPosInWorldSpace = chunkPos * Chunk.dims.x + blockPos;
 
-        List<Chunk> adjacentChunks = GetAdjacentChunks(chunk, chunks);
+        List<Chunk> adjacentChunks = GetAdjacentChunks(chunkPos, chunks);
 
-        float maxDist = Mathf.Sqrt(2f * Mathf.Pow((lerpRange + 1f) * Chunk.dims.x - 0.5f , 2));
+        float maxDist = Mathf.Sqrt(2f * Mathf.Pow((lerpRange + 1f) * Chunk.dims.x - 0.5f, 2));
         float sumOfWeights = 0f;
         float weightedAverage = 0f;
 
@@ -60,15 +55,15 @@ public class Biome : ScriptableObject
         return Mathf.RoundToInt(weightedAverage);
     }
 
-    public static List<Chunk> GetAdjacentChunks(Chunk centreChunk, Dictionary<Vector2Int, Chunk> chunks)
+    private static List<Chunk> GetAdjacentChunks(Vector2Int centreChunkPos, Dictionary<Vector2Int, Chunk> chunks)
     {
         List<Chunk> adjacentChunks = new List<Chunk>();
 
-        for (int x  = -lerpRange; x <= lerpRange; x++)
+        for (int x = -lerpRange; x <= lerpRange; x++)
         {
             for (int y = -lerpRange; y <= lerpRange; y++)
             {
-                Vector2Int chunkPos = centreChunk.GetPos() + new Vector2Int(x, y);
+                Vector2Int chunkPos = centreChunkPos + new Vector2Int(x, y);
                 if (!chunks.ContainsKey(chunkPos)) chunks[chunkPos] = new Chunk(chunkPos);
                 adjacentChunks.Add(chunks[chunkPos]);
             }
@@ -76,16 +71,15 @@ public class Biome : ScriptableObject
         return adjacentChunks;
     }
 
-    public float GetElevationNoise(Vector2Int vector)
+    public static List<KeyValuePair<int, int>> GetBlocks(Vector2Int blockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks)
     {
-        return elevationNoise.GetNoise(vector.x, vector.y) * elevationNoiseAmplitude;
+        Biome biome = GetBiome(chunkPos, new Vector3Int(blockPos.x, 0, blockPos.y));
+        return biome.ObjLevelGetBlocks(blockPos, chunkPos, chunks);
     }
 
-    public int GetBlock(Vector3Int blockPos, Vector2Int chunkPos)
-    {
-        Vector3Int chunkPosInWorldSpace = new Vector3Int(chunkPos.x, 0, chunkPos.y) * Chunk.dims.x;
-        Vector3Int blockPosInWorldSpace = chunkPosInWorldSpace + blockPos;
+    abstract public float GetElevationNoise(Vector2 vector);
 
-        return Block.blockNameToId[block];
-    }
+    abstract public List<KeyValuePair<int, int>> ObjLevelGetBlocks(Vector2Int blockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks);
+
+    abstract public int ObjLevelGetBlock(int elevation);
 }

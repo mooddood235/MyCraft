@@ -70,14 +70,9 @@ public class Chunk
         {
             for (int z = -zRadius; z <= zRadius; z++)
             {
-                Biome biome = Biome.GetBiome(new Vector3Int(x, 0, z), pos);
-                int elevation = Biome.GetElevation(new Vector2Int(x, z), this, chunks);
-                int block = biome.GetBlock(new Vector3Int(x, elevation, z), pos);
-                SetBlock(block, new Vector3Int(x, elevation, z));
-
-                for (int i = 0; i <= 6; i++)
+                foreach (KeyValuePair<int, int> elevationToBlock in Biome.GetBlocks(new Vector2Int(x, z), pos, chunks))
                 {
-                    SetBlock(block, new Vector3Int(x, elevation - i, z));
+                    SetBlock(elevationToBlock.Value, new Vector3Int(x, elevationToBlock.Key, z));
                 }
             }
         }
@@ -127,7 +122,7 @@ public class Chunk
     private void SetTargetBiome()
     {
         Vector3 southWestCorner = new Vector3(-(dims.x - 1f) / 2f - 0.5f, 0f, -(dims.z - 1f) / 2f - 0.5f);
-        targetBiome = Biome.GetBiome(southWestCorner, pos);
+        targetBiome = Biome.GetBiome(pos, southWestCorner);
     }
 
     public Biome GetTargetBiome()

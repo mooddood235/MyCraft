@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 178367340}
   - component: {fileID: 178367339}
-  - component: {fileID: 178367342}
   - component: {fileID: 178367341}
   m_Layer: 0
   m_Name: Manager
@@ -188,24 +187,7 @@ MonoBehaviour:
   viewRadius: 10
   playerTran: {fileID: 5303011150828113892}
   chunkObjPrefab: {fileID: 1909839266076490692, guid: b6498240cafa6424c9df2024ceb3a3f9, type: 3}
-  timeBetweenChunkSpawning: 0.1
---- !u!114 &178367342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 178367338}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f228043a0159664fb04f10bb734e063, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  biomes:
-  - {fileID: 11400000, guid: 1b53915eac5549f4a82caaa82ff78d14, type: 2}
-  - {fileID: 11400000, guid: deec566f3d6081d42a074b3b343e5156, type: 2}
-  biomeNoiseType: 3
-  biomeNoiseFrequency: 0.01
+  timeBetweenChunkSpawning: 0.02
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
