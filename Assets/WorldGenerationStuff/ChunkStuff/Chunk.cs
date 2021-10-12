@@ -70,9 +70,9 @@ public class Chunk
         {
             for (int z = -zRadius; z <= zRadius; z++)
             {
-                foreach (KeyValuePair<int, int> elevationToBlock in Biome.GetBlocks(new Vector2Int(x, z), pos, chunks))
+                foreach (KeyValuePair<Vector3Int, int> elevationToBlock in Biome.GetBlocks(new Vector2Int(x, z), pos, chunks))
                 {
-                    SetBlock(elevationToBlock.Value, new Vector3Int(x, elevationToBlock.Key, z));
+                    SetBlock(elevationToBlock.Value, elevationToBlock.Key);
                 }
             }
         }
@@ -98,11 +98,20 @@ public class Chunk
                     {
                         int trisStart = verts.Count;
 
-                        List<Block.faces> blockFaces = GetBlockFaces(blockPos);
-                        verts.AddRange(GetBlockVerts(blockFaces, blockPos));
-                        uvs.AddRange(GetBlockUvs(Block.idToBlock[GetBlock(blockPos)], blockFaces));
-                        
+                        if (Block.idToBlock[GetBlock(blockPos)] is CubeBlock)
+                        {
+                            List<CubeBlock.faces> blockFaces = GetCubeBlockFaces(blockPos);
+                            verts.AddRange(GetCubeBlockVerts(blockFaces, blockPos));
+                            uvs.AddRange(GetCubeBlockUvs((CubeBlock)Block.idToBlock[GetBlock(blockPos)], blockFaces));
+                        }
+                        else
+                        {
+                            verts.AddRange(PlanesBlock.GetVertsArray());
+                            PlanesBlock block = (PlanesBlock)Block.idToBlock[GetBlock(blockPos)];
+                            uvs.AddRange(block.GetUvsArray());
+                        }
 
+                        
                         for (int i = trisStart; i < verts.Count; i += 4)
                         {
                             int[] firstTri = new int[] { i, i + 1, i + 2 };
@@ -130,59 +139,68 @@ public class Chunk
         return targetBiome;
     }
 
-    private Vector3[] GetBlockVerts(List<Block.faces> blockFaces, Vector3Int blockPos)
+    private Vector3[] GetCubeBlockVerts(List<CubeBlock.faces> blockFaces, Vector3Int blockPos)
     {
         List<Vector3> blockVerts = new List<Vector3>();
         
-        foreach (Block.faces face in blockFaces)
+        foreach (CubeBlock.faces face in blockFaces)
         {
-            blockVerts.AddRange(Block.GetVertsArray(face));
+            blockVerts.AddRange(CubeBlock.GetVertsArray(face));
         }
 
         return AMath.AddVector(blockVerts.ToArray(), blockPos);
     }
 
-    private Vector2[] GetBlockUvs(Block block, List<Block.faces> blockFaces)
+    private Vector2[] GetCubeBlockUvs(CubeBlock block, List<CubeBlock.faces> blockFaces)
     {
         List<Vector2> blockUvs = new List<Vector2>();
         
-        foreach (Block.faces face in blockFaces)
+        foreach (CubeBlock.faces face in blockFaces)
         {
             blockUvs.AddRange(block.GetUvsArray(face));
         }
         return blockUvs.ToArray();
     }
 
-    private List<Block.faces> GetBlockFaces(Vector3Int blockPos)
+    private List<CubeBlock.faces> GetCubeBlockFaces(Vector3Int blockPos)
     {
-        List<Block.faces> faces = new List<Block.faces>();
+        List<CubeBlock.faces> faces = new List<CubeBlock.faces>();
 
         // Boolean expression logic for all if statements is the following:
-        // If (the block is NOT at the side of the chunk AND the block next to it is air) OR (The block is at the side of the chunk)
+        // If (the block is NOT at the side of the chunk AND (the block next to it is air or is a PlanesBlock)) OR (The block is at the side of the chunk)
 
-        if (blockPos.x > -(dims.x - 1) / 2 && GetBlock(blockPos + new Vector3Int(-1, 0, 0)) == 0 || blockPos.x == -(dims.x - 1) / 2)
+        Vector3Int negXblockPos = blockPos + Vector3Int.left;
+        Vector3Int xBlockPos = blockPos + Vector3Int.right;
+
+        Vector3Int negYBlockPos = blockPos + Vector3Int.down;
+        Vector3Int yBlockPos = blockPos + Vector3Int.up;
+
+        Vector3Int negZBlockPos = blockPos + Vector3Int.back;
+        Vector3Int zBlockPos = blockPos + Vector3Int.forward;
+
+        if (blockPos.x > -(dims.x - 1) / 2 && (GetBlock(negXblockPos) == 0 || Block.idToBlock[GetBlock(negXblockPos)] is PlanesBlock) || blockPos.x == -(dims.x - 1) / 2)
         {
-            faces.Add(Block.faces.negXFace);
+            faces.Add(CubeBlock.faces.negXFace);
         }
-        if (blockPos.x < (dims.x - 1) / 2 && GetBlock(blockPos + new Vector3Int(1, 0, 0)) == 0 || blockPos.x == (dims.x - 1) / 2)
+        if (blockPos.x < (dims.x - 1) / 2 && (GetBlock(xBlockPos) == 0 || Block.idToBlock[GetBlock(xBlockPos)] is PlanesBlock) || blockPos.x == (dims.x - 1) / 2)
         {
-            faces.Add(Block.faces.xFace);
+            faces.Add(CubeBlock.faces.xFace);
         }
-        if (blockPos.y > -(dims.y - 1) / 2 && GetBlock(blockPos + new Vector3Int(0, -1, 0)) == 0 || blockPos.y == -(dims.y - 1) / 2)
+        if (blockPos.y > -(dims.y - 1) / 2 && (GetBlock(negYBlockPos) == 0 || Block.idToBlock[GetBlock(negYBlockPos)] is PlanesBlock) || blockPos.y == -(dims.y - 1) / 2)
         {
-            faces.Add(Block.faces.negYFace);
+            faces.Add(CubeBlock.faces.negYFace);
         }
-        if (blockPos.y < (dims.y - 1) / 2 && GetBlock(blockPos + new Vector3Int(0, 1, 0)) == 0 || blockPos.y == (dims.y - 1) / 2)
+        if (blockPos.y < (dims.y - 1) / 2 && (GetBlock(yBlockPos) == 0 || Block.idToBlock[GetBlock(yBlockPos)] is PlanesBlock) || blockPos.y == (dims.y - 1) / 2)
         {
-            faces.Add(Block.faces.yFace);
+            faces.Add(CubeBlock.faces.yFace);
         }
-        if (blockPos.z > -(dims.z - 1) / 2 && GetBlock(blockPos + new Vector3Int(0, 0, -1)) == 0 || blockPos.z == -(dims.z - 1) / 2)
+        if (blockPos.z > -(dims.z - 1) / 2 && (GetBlock(negZBlockPos) == 0 || Block.idToBlock[GetBlock(negZBlockPos)] is PlanesBlock) || blockPos.z == -(dims.z - 1) / 2)
         {
-            faces.Add(Block.faces.negZFace);
+            faces.Add(CubeBlock.faces.negZFace);
         }
-        if (blockPos.z < (dims.z - 1) / 2 && GetBlock(blockPos + new Vector3Int(0, 0, 1)) == 0 || blockPos.z == (dims.z - 1) / 2)
+        if (blockPos.z < (dims.z - 1) / 2 && (GetBlock(zBlockPos) == 0 || Block.idToBlock[GetBlock(zBlockPos)] is PlanesBlock) || blockPos.z == (dims.z - 1) / 2)
         {
-            faces.Add(Block.faces.zFace);
+            faces.Add(CubeBlock.faces.zFace);
         }
 
         return faces; 

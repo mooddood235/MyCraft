@@ -71,7 +71,7 @@ public abstract class Biome
         return adjacentChunks;
     }
 
-    public static List<KeyValuePair<int, int>> GetBlocks(Vector2Int blockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks)
+    public static List<KeyValuePair<Vector3Int, int>> GetBlocks(Vector2Int blockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks)
     {
         Biome biome = GetBiome(chunkPos, new Vector3Int(blockPos.x, 0, blockPos.y));
         return biome.ObjLevelGetBlocks(blockPos, chunkPos, chunks);
@@ -79,7 +79,7 @@ public abstract class Biome
 
     abstract public float GetElevationNoise(Vector2 vector);
 
-    abstract public List<KeyValuePair<int, int>> ObjLevelGetBlocks(Vector2Int blockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks);
+    abstract public List<KeyValuePair<Vector3Int, int>> ObjLevelGetBlocks(Vector2Int blockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks);
 
     abstract public int ObjLevelGetBlock(int elevation);
 }

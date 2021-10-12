@@ -14,13 +14,21 @@ public class Forest : Biome
         return elevationNoise.GetNoise(vector.x, vector.y) * amplitude;
     }
 
-    public override List<KeyValuePair<int, int>> ObjLevelGetBlocks(Vector2Int blockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks)
+    public override List<KeyValuePair<Vector3Int, int>> ObjLevelGetBlocks(Vector2Int blockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks)
     {
-        List<KeyValuePair<int, int>> blocks = new List<KeyValuePair<int, int>>();
+        Vector3Int blockPosIn3D = new Vector3Int(blockPos.x, 0, blockPos.y);
+        List<KeyValuePair<Vector3Int, int>> blocks = new List<KeyValuePair<Vector3Int, int>>();
 
         int lerpedElevation = GetLerpedElevation(blockPos, chunkPos, chunks);
 
-        blocks.Add(new KeyValuePair<int, int>(lerpedElevation, ObjLevelGetBlock(lerpedElevation)));
+        blocks.Add(new KeyValuePair<Vector3Int, int>(blockPosIn3D + Vector3Int.up * lerpedElevation, ObjLevelGetBlock(lerpedElevation)));
+
+        System.Random random = new System.Random();
+
+        if (random.Next(0, 10) >= 9)
+        {
+            blocks.Add(new KeyValuePair<Vector3Int, int>(blockPosIn3D + Vector3Int.up * (lerpedElevation + 1), Block.blockNameToId["Weed"]));
+        }
 
         return blocks;
     }

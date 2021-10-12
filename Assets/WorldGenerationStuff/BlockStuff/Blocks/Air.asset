@@ -9,14 +9,44 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35c55e30db735a24fa398f5a1d977b29, type: 3}
+  m_Script: {fileID: 11500000, guid: a4fb710c699a03d49bba3a8f1097a658, type: 3}
   m_Name: Air
   m_EditorClassIdentifier: 
   id: 0
   name: Air
-  zFaceUvs: []
-  negZFaceUvs: []
-  yFaceUvs: []
-  negYFaceUvs: []
-  xFaceUvs: []
-  negXFaceUvs: []
+  negXFaceUvs:
+  - {x: 0.0078125, y: 0.0078125}
+  - {x: 0.0078125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.0078125}
+  xFaceUvs:
+  - {x: 0.0078125, y: 0.0078125}
+  - {x: 0.0078125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.0078125}
+  negYFaceUvs:
+  - {x: 0.0078125, y: 0.0078125}
+  - {x: 0.0078125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.0078125}
+  yFaceUvs:
+  - {x: 0.0078125, y: 0.0078125}
+  - {x: 0.0078125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.0078125}
+  negZFaceUvs:
+  - {x: 0.0078125, y: 0.0078125}
+  - {x: 0.0078125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.0078125}
+  zFaceUvs:
+  - {x: 0.0078125, y: 0.0078125}
+  - {x: 0.0078125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.1328125}
+  - {x: 0.1328125, y: 0.0078125}
+  negXFaceAtlasIndex: {x: 0, y: 0}
+  xFaceAtlasIndex: {x: 0, y: 0}
+  negYFaceAtlasIndex: {x: 0, y: 0}
+  yFaceAtlasIndex: {x: 0, y: 0}
+  negZFaceAtlasIndex: {x: 0, y: 0}
+  zFaceAtlasIndex: {x: 0, y: 0}

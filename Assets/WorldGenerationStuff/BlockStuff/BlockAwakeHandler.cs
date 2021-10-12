@@ -30,26 +30,43 @@ public class BlockAwakeHandler : MonoBehaviour
     }
     private void RefillUvs(Block block)
     {
-        block.negXFaceUvs = new List<Vector2>();
-        block.xFaceUvs = new List<Vector2>();
-        block.negYFaceUvs = new List<Vector2>();
-        block.yFaceUvs = new List<Vector2>();
-        block.negZFaceUvs = new List<Vector2>();
-        block.zFaceUvs = new List<Vector2>();
-
-        foreach (Vector2 uv in Block.normalUvs)
+        if (block is CubeBlock)
         {
-            // Logic behind algorithm:
-            // uvPos = offsetFromPadding + offsetFromIndex + offsetFromUv
+            CubeBlock block_ = (CubeBlock)block;
 
-            block.negXFaceUvs.Add((new Vector2(1, 1) + block.negXFaceAtlasIndex * 18f + uv * 16f) / Block.AtlasRes);
-            block.xFaceUvs.Add((new Vector2(1, 1) + block.xFaceAtlasIndex * 18f + uv * 16f) / Block.AtlasRes);
-            block.negYFaceUvs.Add((new Vector2(1, 1) + block.negYFaceAtlasIndex * 18f + uv * 16f) / Block.AtlasRes);
-            block.yFaceUvs.Add((new Vector2(1, 1) + block.yFaceAtlasIndex * 18f + uv * 16f) / Block.AtlasRes);
-            block.negZFaceUvs.Add((new Vector2(1, 1) + block.negZFaceAtlasIndex * 18f + uv * 16f) / Block.AtlasRes);
-            block.zFaceUvs.Add((new Vector2(1, 1) + block.zFaceAtlasIndex * 18f + uv * 16f) / Block.AtlasRes);
+            block_.negXFaceUvs = new List<Vector2>();
+            block_.xFaceUvs = new List<Vector2>();
+            block_.negYFaceUvs = new List<Vector2>();
+            block_.yFaceUvs = new List<Vector2>();
+            block_.negZFaceUvs = new List<Vector2>();
+            block_.zFaceUvs = new List<Vector2>();
+
+            foreach (Vector2 uv in Block.normalUvs)
+            {
+                // Logic behind algorithm:
+                // uvPos = offsetFromPadding + offsetFromIndex + offsetFromUv
+
+                block_.negXFaceUvs.Add((new Vector2(1, 1) + block_.negXFaceAtlasIndex * 18f + uv * 16f) / Block.AtlasRes);
+                block_.xFaceUvs.Add((new Vector2(1, 1) + block_.xFaceAtlasIndex * 18f + uv * 16f) / Block.AtlasRes);
+                block_.negYFaceUvs.Add((new Vector2(1, 1) + block_.negYFaceAtlasIndex * 18f + uv * 16f) / Block.AtlasRes);
+                block_.yFaceUvs.Add((new Vector2(1, 1) + block_.yFaceAtlasIndex * 18f + uv * 16f) / Block.AtlasRes);
+                block_.negZFaceUvs.Add((new Vector2(1, 1) + block_.negZFaceAtlasIndex * 18f + uv * 16f) / Block.AtlasRes);
+                block_.zFaceUvs.Add((new Vector2(1, 1) + block_.zFaceAtlasIndex * 18f + uv * 16f) / Block.AtlasRes);
+            }
         }
+        else
+        {
+            PlanesBlock block_ = (PlanesBlock)block;
+            block_.uvs = new List<Vector2>();
+            
+            foreach (Vector2 uv in Block.normalUvs)
+            {
+                block_.uvs.Add((new Vector2(1, 1) + block_.atlasIndex * 18f + uv * 16f) / Block.AtlasRes);
+            }
+            foreach (Vector2 uv in Block.normalUvs)
+            {
+                block_.uvs.Add((new Vector2(1, 1) + block_.atlasIndex * 18f + uv * 16f) / Block.AtlasRes);
+            }
+        }       
     }
-
-
 }
