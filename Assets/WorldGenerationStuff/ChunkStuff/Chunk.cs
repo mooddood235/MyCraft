@@ -106,7 +106,7 @@ public class Chunk
                         }
                         else
                         {
-                            verts.AddRange(PlanesBlock.GetVertsArray());
+                            verts.AddRange(AMath.AddVector(PlanesBlock.GetVertsArray(), blockPos));
                             PlanesBlock block = (PlanesBlock)Block.idToBlock[GetBlock(blockPos)];
                             uvs.AddRange(block.GetUvsArray());
                         }
