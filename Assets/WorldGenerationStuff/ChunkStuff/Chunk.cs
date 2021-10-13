@@ -13,6 +13,7 @@ public class Chunk
     private GameObject chunkObj = null;
     private int[,,] blocks = new int[dims.x, dims.y, dims.z];
     private MeshData meshData = new MeshData();
+    private MeshData colliderMeshData = new MeshData();
     private Mesh mesh;
     private bool meshGenerated = false;
     private bool generated = false;
