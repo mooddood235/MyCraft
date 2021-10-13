@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ScriptableObjects", menuName = "ScriptableObjects/PlanesBlockObj")]
 public class PlanesBlock : Block
 {
-    private static Vector3[] verts = new Vector3[]
+    private static List<Vector3> verts = new List<Vector3>()
     {
         new Vector3(-0.5f, -0.5f, -0.5f),
         new Vector3(-0.5f, 0.5f, -0.5f),
@@ -24,14 +24,13 @@ public class PlanesBlock : Block
     [HideInInspector]
     public List<Vector2> uvs = new List<Vector2>();
 
-
-    public List<Vector2> GetUvsArray()
+    public List<Vector2> GetUvs()
     {
         return uvs;
     }
 
-    public static Vector3[] GetVertsArray()
+    public static List<Vector3> GetVerts(Vector3Int blockPos)
     {
-        return verts;
+        return AMath.AddVector(verts, blockPos);
     }
 }

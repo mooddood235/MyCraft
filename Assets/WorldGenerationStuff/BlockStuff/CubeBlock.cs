@@ -122,7 +122,7 @@ public class CubeBlock : Block
         all
     }
 
-    public static Vector3[] GetVertsArray(faces face)
+    private static Vector3[] FaceToVerts(faces face)
     {
         if (face == faces.negXFace) return negXFaceVerts;
         else if (face == faces.xFace) return xFaceVerts;
@@ -133,7 +133,30 @@ public class CubeBlock : Block
         else return allFaceVerts;
     }
 
-    public List<Vector2> GetUvsArray(faces face)
+    public static List<Vector3> GetVerts(Vector3Int blockPos, List<faces> blockFaces)
+    {
+        List<Vector3> blockVerts = new List<Vector3>();
+
+        foreach (faces face in blockFaces)
+        {
+            blockVerts.AddRange(FaceToVerts(face));
+        }
+
+        return AMath.AddVector(blockVerts, blockPos);
+    }
+
+    public List<Vector2> GetUvs(List<faces> blockFaces)
+    {
+        List<Vector2> blockUvs = new List<Vector2>();
+
+        foreach (faces face in blockFaces)
+        {
+            blockUvs.AddRange(FaceToUv(face));
+        }
+        return blockUvs;
+    }
+
+    private List<Vector2> FaceToUv(faces face)
     {
         if (face == faces.negXFace) return negXFaceUvs;
         else if (face == faces.xFace) return xFaceUvs;

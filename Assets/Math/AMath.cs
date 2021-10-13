@@ -14,4 +14,14 @@ public static class AMath
         }
         return newArray;
     }
+    public static List<Vector3> AddVector(List<Vector3> list, Vector3 vectorToAdd)
+    {
+        List<Vector3> newList = new List<Vector3>();
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            newList.Add(list[i] + vectorToAdd);
+        }
+        return newList;
+    }
 }

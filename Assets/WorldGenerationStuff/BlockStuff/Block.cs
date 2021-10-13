@@ -23,12 +23,11 @@ public abstract class Block : ScriptableObject
     public static Dictionary<int, Block> idToBlock = new Dictionary<int, Block>();
     public static Dictionary<string, int> blockNameToId = new Dictionary<string, int>();
 
-    public Vector3[] GetVertsArray()
+    public List<Vector3> GetVerts()
     {
         throw new System.NotImplementedException();
     }
-
-    public List<Vector2> GetUvsArray()
+    public List<Vector2> GetUvs()
     {
         throw new System.NotImplementedException();
     }

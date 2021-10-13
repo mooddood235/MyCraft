@@ -101,14 +101,16 @@ public class Chunk
                         if (Block.idToBlock[GetBlock(blockPos)] is CubeBlock)
                         {
                             List<CubeBlock.faces> blockFaces = GetCubeBlockFaces(blockPos);
-                            verts.AddRange(GetCubeBlockVerts(blockFaces, blockPos));
-                            uvs.AddRange(GetCubeBlockUvs((CubeBlock)Block.idToBlock[GetBlock(blockPos)], blockFaces));
+                            verts.AddRange(CubeBlock.GetVerts(blockPos, blockFaces));
+
+                            CubeBlock block_ = (CubeBlock)Block.idToBlock[GetBlock(blockPos)];
+                            uvs.AddRange(block_.GetUvs(blockFaces));
                         }
                         else
                         {
-                            verts.AddRange(AMath.AddVector(PlanesBlock.GetVertsArray(), blockPos));
-                            PlanesBlock block = (PlanesBlock)Block.idToBlock[GetBlock(blockPos)];
-                            uvs.AddRange(block.GetUvsArray());
+                            verts.AddRange(PlanesBlock.GetVerts(blockPos));
+                            PlanesBlock block_ = (PlanesBlock)Block.idToBlock[GetBlock(blockPos)];
+                            uvs.AddRange(block_.GetUvs());
                         }
 
                         
@@ -137,29 +139,6 @@ public class Chunk
     public Biome GetTargetBiome()
     {
         return targetBiome;
-    }
-
-    private Vector3[] GetCubeBlockVerts(List<CubeBlock.faces> blockFaces, Vector3Int blockPos)
-    {
-        List<Vector3> blockVerts = new List<Vector3>();
-        
-        foreach (CubeBlock.faces face in blockFaces)
-        {
-            blockVerts.AddRange(CubeBlock.GetVertsArray(face));
-        }
-
-        return AMath.AddVector(blockVerts.ToArray(), blockPos);
-    }
-
-    private Vector2[] GetCubeBlockUvs(CubeBlock block, List<CubeBlock.faces> blockFaces)
-    {
-        List<Vector2> blockUvs = new List<Vector2>();
-        
-        foreach (CubeBlock.faces face in blockFaces)
-        {
-            blockUvs.AddRange(block.GetUvsArray(face));
-        }
-        return blockUvs.ToArray();
     }
 
     private List<CubeBlock.faces> GetCubeBlockFaces(Vector3Int blockPos)
