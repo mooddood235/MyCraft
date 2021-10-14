@@ -78,7 +78,7 @@ public class WorldGenerator2 : MonoBehaviour
     {
         foreach (Chunk chunk in chunksToSpawn)
         {
-            if (!chunk.isGenerated())
+            if (!chunk.IsGenerated())
             {
                 chunk.Generate(chunks);
             }
@@ -119,7 +119,7 @@ public class WorldGenerator2 : MonoBehaviour
             chunkObj.SetActive(true);
         }
 
-        if (!chunk.meshIsGenerated()) chunk.SetMeshFromMeshData();
+        if (!chunk.MeshIsGenerated()) chunk.SetMeshFromMeshData();
 
         chunkObj.GetComponent<MeshFilter>().mesh = chunk.GetMesh();
         chunkObj.GetComponent<MeshCollider>().sharedMesh = chunk.GetMesh();

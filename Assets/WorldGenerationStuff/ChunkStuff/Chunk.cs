@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +34,7 @@ public class Chunk
     {
         return pos;
     }
-
+    
     private void SetBlock(int block, Vector3Int blockPos)
     {
         Vector3Int arrayCoords = GetArrayCoordsFromCentroidCoords(blockPos);
@@ -197,12 +198,12 @@ public class Chunk
         mesh = meshData.GetMesh();
     }
 
-    public bool meshIsGenerated()
+    public bool MeshIsGenerated()
     {
         return meshGenerated;
     }
 
-    public bool isGenerated()
+    public bool IsGenerated()
     {
         return generated;
     }
