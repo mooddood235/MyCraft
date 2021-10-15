@@ -119,10 +119,14 @@ public class WorldGenerator2 : MonoBehaviour
             chunkObj.SetActive(true);
         }
 
-        if (!chunk.MeshIsGenerated()) chunk.SetMeshFromMeshData();
+        if (!chunk.MeshIsGenerated())
+        {
+            chunk.SetMeshFromMeshData();
+            chunk.SetColliderMeshFromColliderMeshData();
+        }
 
         chunkObj.GetComponent<MeshFilter>().mesh = chunk.GetMesh();
-        chunkObj.GetComponent<MeshCollider>().sharedMesh = chunk.GetMesh();
+        chunkObj.GetComponent<MeshCollider>().sharedMesh = chunk.GetColliderMesh();
         chunk.SetChunkObj(chunkObj);
     }
     

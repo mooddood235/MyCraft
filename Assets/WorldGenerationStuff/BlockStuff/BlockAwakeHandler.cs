@@ -58,15 +58,18 @@ public class BlockAwakeHandler : MonoBehaviour
         {
             PlanesBlock block_ = (PlanesBlock)block;
             block_.uvs = new List<Vector2>();
-            
+
+            List<Vector2> uvsToAdd = new List<Vector2>();
+
             foreach (Vector2 uv in Block.normalUvs)
             {
-                block_.uvs.Add((new Vector2(1, 1) + block_.atlasIndex * 18f + uv * 16f) / Block.AtlasRes);
+                uvsToAdd.Add((new Vector2(1, 1) + block_.atlasIndex * 18f + uv * 16f) / Block.AtlasRes);
             }
-            foreach (Vector2 uv in Block.normalUvs)
-            {
-                block_.uvs.Add((new Vector2(1, 1) + block_.atlasIndex * 18f + uv * 16f) / Block.AtlasRes);
-            }
+
+            block_.uvs.AddRange(uvsToAdd);
+            block_.uvs.AddRange(uvsToAdd);
+            block_.uvs.AddRange(uvsToAdd);
+            block_.uvs.AddRange(uvsToAdd);
         }       
     }
 }

@@ -6,13 +6,27 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ScriptableObjects", menuName = "ScriptableObjects/PlanesBlockObj")]
 public class PlanesBlock : Block
 {
-    private static List<Vector3> verts = new List<Vector3>()
+    private static List<Vector3> verts = new List<Vector3>
     {
+        // Front face.
         new Vector3(-0.5f, -0.5f, -0.5f),
         new Vector3(-0.5f, 0.5f, -0.5f),
         new Vector3(0.5f, 0.5f, 0.5f),
         new Vector3(0.5f, -0.5f, 0.5f),
+        
+        // Back face.
+        new Vector3(-0.5f, -0.5f, -0.5f),
+        new Vector3(-0.5f, 0.5f, -0.5f),
+        new Vector3(0.5f, 0.5f, 0.5f),
+        new Vector3(0.5f, -0.5f, 0.5f),
+        
+        // Front face.
+        new Vector3(0.5f, -0.5f, -0.5f),
+        new Vector3(0.5f, 0.5f, -0.5f),
+        new Vector3(-0.5f, 0.5f, 0.5f),
+        new Vector3(-0.5f, -0.5f, 0.5f),
 
+        // Back face.
         new Vector3(0.5f, -0.5f, -0.5f),
         new Vector3(0.5f, 0.5f, -0.5f),
         new Vector3(-0.5f, 0.5f, 0.5f),

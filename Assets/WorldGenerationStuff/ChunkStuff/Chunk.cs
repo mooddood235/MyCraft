@@ -11,13 +11,14 @@ public class Chunk
      */
     public static Vector3Int dims = new Vector3Int(17, 61, 17);
     private Vector2Int pos;
-    private GameObject chunkObj = null;
+    private GameObject chunkObj;
     private int[,,] blocks = new int[dims.x, dims.y, dims.z];
     private MeshData meshData = new MeshData();
     private MeshData colliderMeshData = new MeshData();
     private Mesh mesh;
-    private bool meshGenerated = false;
-    private bool generated = false;
+    private Mesh colliderMesh;
+    private bool meshGenerated;
+    private bool generated;
     private Biome targetBiome;
     public static readonly Vector2 offsetToSouthWestCorner = new Vector2((dims.x - 1f) / 2f + 0.5f, (dims.z - 1f) / 2f + 0.5f);
 
@@ -81,9 +82,12 @@ public class Chunk
     }
     public void GenerateMesh()
     {
-        List<Vector3> verts = new List<Vector3>();
-        List<int> tris = new List<int>();
-        List<Vector2> uvs = new List<Vector2>();
+        List<Vector3> meshVerts = new List<Vector3>();
+        List<int> meshTris = new List<int>();
+        List<Vector2> mesUvs = new List<Vector2>();
+        
+        List<Vector3> colliderMeshVerts = new List<Vector3>();
+        List<int> colliderMeshTris = new List<int>();
 
         int xRadius = (dims.x - 1) / 2;
         int yRadius = (dims.y - 1) / 2;
@@ -98,40 +102,43 @@ public class Chunk
                     Vector3Int blockPos = new Vector3Int(x, y, z);
                     if (GetBlock(blockPos) != Block.blockNameToId["Air"])
                     {
-                        int trisStart = verts.Count;
-
+                        int meshTrisStart = meshVerts.Count;
+                        
                         if (Block.idToBlock[GetBlock(blockPos)] is CubeBlock)
                         {
+                            int colliderMeshTrisStart = colliderMeshVerts.Count;
+
                             List<CubeBlock.faces> blockFaces = GetCubeBlockFaces(blockPos);
-                            verts.AddRange(CubeBlock.GetVerts(blockPos, blockFaces));
+                            List<Vector3> verts = CubeBlock.GetVerts(blockPos, blockFaces);
+                            meshVerts.AddRange(verts);
+                            colliderMeshVerts.AddRange(verts);
 
                             CubeBlock block_ = (CubeBlock)Block.idToBlock[GetBlock(blockPos)];
-                            uvs.AddRange(block_.GetUvs(blockFaces));
+                            mesUvs.AddRange(block_.GetUvs(blockFaces));
+                            
+                            MeshData.AddTris(meshTrisStart, meshVerts.Count, meshTris);
+                            MeshData.AddTris(colliderMeshTrisStart, colliderMeshVerts.Count, colliderMeshTris);
                         }
                         else
                         {
-                            verts.AddRange(PlanesBlock.GetVerts(blockPos));
+                            meshVerts.AddRange(PlanesBlock.GetVerts(blockPos));
                             PlanesBlock block_ = (PlanesBlock)Block.idToBlock[GetBlock(blockPos)];
-                            uvs.AddRange(block_.GetUvs());
-                        }
-
-                        
-                        for (int i = trisStart; i < verts.Count; i += 4)
-                        {
-                            int[] firstTri = new int[] { i, i + 1, i + 2 };
-                            int[] secondTri = new int[] { i + 2, i + 3, i };
-                            tris.AddRange(firstTri);
-                            tris.AddRange(secondTri);
+                            mesUvs.AddRange(block_.GetUvs());
+                            
+                            MeshData.AddDoubleSidedTris(meshTrisStart, meshVerts.Count, meshTris);
                         }
                     }
                }
             }
         }
-        meshData.vertices = verts.ToArray();
-        meshData.triangles = tris.ToArray();
-        meshData.uv = uvs.ToArray();
+        meshData.vertices = meshVerts.ToArray();
+        meshData.triangles = meshTris.ToArray();
+        meshData.uv = mesUvs.ToArray();
+
+        colliderMeshData.vertices = colliderMeshVerts.ToArray();
+        colliderMeshData.triangles = colliderMeshTris.ToArray();
     }
-    
+
     private void SetTargetBiome()
     {
         Vector3 southWestCorner = new Vector3(-(dims.x - 1f) / 2f - 0.5f, 0f, -(dims.z - 1f) / 2f - 0.5f);
@@ -192,10 +199,20 @@ public class Chunk
         return mesh;
     }
 
+    public Mesh GetColliderMesh()
+    {
+        return colliderMesh;
+    }
+    
     public void SetMeshFromMeshData()
     {
         meshGenerated = true;
         mesh = meshData.GetMesh();
+    }
+
+    public void SetColliderMeshFromColliderMeshData()
+    {
+        colliderMesh = colliderMeshData.GetMesh();
     }
 
     public bool MeshIsGenerated()
