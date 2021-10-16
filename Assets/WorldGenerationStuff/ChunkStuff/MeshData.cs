@@ -45,9 +45,6 @@ public class MeshData
         }
     }
     
-    
-    
-    
     public Mesh GetMesh()
     {
         Mesh mesh = new Mesh();

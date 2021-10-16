@@ -80,6 +80,4 @@ public abstract class Biome
     abstract public float GetElevationNoise(Vector2 vector);
 
     abstract public List<KeyValuePair<Vector3Int, int>> ObjLevelGetBlocks(Vector2Int blockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks);
-
-    abstract public int ObjLevelGetBlock(int elevation);
 }

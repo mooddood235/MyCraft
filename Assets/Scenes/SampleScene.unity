@@ -158,6 +158,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 67b23a567cc98324d8c8bc7ac3a71749, type: 2}
   - {fileID: 11400000, guid: 51ed758f13604dd438ebecd0534c0bd7, type: 2}
   - {fileID: 11400000, guid: 00c3aef31b098d746a5d441c2c424b03, type: 2}
+  - {fileID: 11400000, guid: 693d1d9d8c5c41c4d81d8e0f8c33ae1e, type: 2}
   refillUvs: 1
 --- !u!4 &178367340
 Transform:
