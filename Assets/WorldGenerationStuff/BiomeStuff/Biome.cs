@@ -7,12 +7,13 @@ public abstract class Biome
     public static FastNoiseLite biomeNoise = new FastNoiseLite();
     public static Dictionary<Vector2, Biome> boundToBiome = new Dictionary<Vector2, Biome>()
     {
-        { new Vector2(-1f, 0f), new Forest() },
-        { new Vector2 (0f, 1f), new StoneLand() }
+        { new Vector2(-1f, 1f), new OakForest() },
     };
     public static Vector2 boundWithSmallestMin = new Vector2(Mathf.Infinity, 0);
     public static Vector2 boundWithGreatestMax = new Vector2(0, Mathf.NegativeInfinity);
     private static int lerpRange = 4;
+
+    protected System.Random random = new System.Random();
 
     public static Biome GetBiome(Vector2Int chunkPos, Vector3 blockPos)
     {
@@ -79,5 +80,5 @@ public abstract class Biome
 
     abstract public float GetElevationNoise(Vector2 vector);
 
-    abstract public List<KeyValuePair<Vector3Int, int>> ObjLevelGetBlocks(Vector2Int blockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks);
+    abstract public List<KeyValuePair<Vector3Int, int>> ObjLevelGetBlocks(Vector2Int surfaceBlockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks);
 }

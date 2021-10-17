@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4fb710c699a03d49bba3a8f1097a658, type: 3}
+  m_Name: OakLeaves
+  m_EditorClassIdentifier: 
+  id: 6
+  name: OakLeaves
+  negXFaceUvs: []
+  xFaceUvs: []
+  negYFaceUvs: []
+  yFaceUvs: []
+  negZFaceUvs: []
+  zFaceUvs: []
+  negXFaceAtlasIndex: {x: 0, y: 1}
+  xFaceAtlasIndex: {x: 0, y: 1}
+  negYFaceAtlasIndex: {x: 0, y: 1}
+  yFaceAtlasIndex: {x: 0, y: 1}
+  negZFaceAtlasIndex: {x: 0, y: 1}
+  zFaceAtlasIndex: {x: 0, y: 1}
