@@ -9,8 +9,7 @@ public class OakForest : Biome
 
     private int grassBlock = Block.blockNameToId["Grass"];
 
-    private const float OakTreeMin = -0.01f;
-    private const float OakTreeMax = 0f;
+    private Range oakTreeRange = new Range(0, 0.01f);
 
     public override float GetElevationNoise(Vector2 vector)
     {
@@ -28,8 +27,10 @@ public class OakForest : Biome
         // Add grass block.
         Vector3Int grassPos = new Vector3Int(surfaceBlockPos.x, lerpedElevation, surfaceBlockPos.y);
         blocks.Add(new KeyValuePair<Vector3Int, int>(grassPos, grassBlock));
-        
-        if (Noise.Within(oakTreeNoise.GetNoise(surfaceBlockPosInWorldSpace), OakTreeMin, OakTreeMax) && random.Next(0, 2) == 1)
+
+        bool shouldSpawnOakTree = oakTreeRange.Within(oakTreeNoise.GetNoise(surfaceBlockPosInWorldSpace));
+        // Add oak tree.
+        if (shouldSpawnOakTree && random.Next(0, 2) == 1)
         {
             blocks.AddRange(OakTree.GenerateStructure(grassPos + Vector3Int.up));
         }

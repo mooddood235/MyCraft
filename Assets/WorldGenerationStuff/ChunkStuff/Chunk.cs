@@ -7,9 +7,11 @@ public class Chunk
 {
     /*
      * Representation Invariants:
-     *      dims.x == dims.y && all dimensions must be odd.
+     *      dims.x == dims.z && all dimensions must be odd.
      */
     public static Vector3Int dims = new Vector3Int(17, 61, 17);
+    public static readonly int halfExtent = (dims.x - 1) / 2;
+    public static readonly Range horizontalBounds = new Range(-(dims.x - 1) / 2, (dims.x - 1) / 2);
     private Vector2Int pos;
     private GameObject chunkObj;
     private int[,,] blocks = new int[dims.x, dims.y, dims.z];
@@ -50,9 +52,9 @@ public class Chunk
 
     private Vector3Int GetArrayCoordsFromCentroidCoords(Vector3Int centroidCoords)
     {
-        int x = centroidCoords.x + (dims.x - 1) / 2;
+        int x = centroidCoords.x + halfExtent;
         int y = centroidCoords.y + (dims.y - 1) / 2;
-        int z = centroidCoords.z + (dims.z - 1) / 2;
+        int z = centroidCoords.z + halfExtent;
 
         return new Vector3Int(x, y, z);
     }
@@ -66,8 +68,8 @@ public class Chunk
     }
     public void GenerateBlocks(Dictionary<Vector2Int, Chunk> chunks)
     {
-        int xRadius = (dims.x - 1) / 2;
-        int zRadius = (dims.z - 1) / 2;
+        int xRadius = halfExtent;
+        int zRadius = halfExtent;
 
         for (int x = -xRadius; x <= xRadius; x++)
         {
@@ -89,9 +91,9 @@ public class Chunk
         List<Vector3> colliderMeshVerts = new List<Vector3>();
         List<int> colliderMeshTris = new List<int>();
 
-        int xRadius = (dims.x - 1) / 2;
+        int xRadius = halfExtent;
         int yRadius = (dims.y - 1) / 2;
-        int zRadius = (dims.z - 1) / 2;
+        int zRadius = halfExtent;
 
         for (int x = -xRadius; x <= xRadius; x++)
         {
@@ -166,11 +168,11 @@ public class Chunk
         Vector3Int negZBlockPos = blockPos + Vector3Int.back;
         Vector3Int zBlockPos = blockPos + Vector3Int.forward;
 
-        if (blockPos.x > -(dims.x - 1) / 2 && (GetBlock(negXblockPos) == 0 || Block.idToBlock[GetBlock(negXblockPos)] is PlanesBlock) || blockPos.x == -(dims.x - 1) / 2)
+        if (blockPos.x > -halfExtent && (GetBlock(negXblockPos) == 0 || Block.idToBlock[GetBlock(negXblockPos)] is PlanesBlock) || blockPos.x == -halfExtent)
         {
             faces.Add(CubeBlock.faces.negXFace);
         }
-        if (blockPos.x < (dims.x - 1) / 2 && (GetBlock(xBlockPos) == 0 || Block.idToBlock[GetBlock(xBlockPos)] is PlanesBlock) || blockPos.x == (dims.x - 1) / 2)
+        if (blockPos.x < halfExtent && (GetBlock(xBlockPos) == 0 || Block.idToBlock[GetBlock(xBlockPos)] is PlanesBlock) || blockPos.x == halfExtent)
         {
             faces.Add(CubeBlock.faces.xFace);
         }
@@ -182,11 +184,11 @@ public class Chunk
         {
             faces.Add(CubeBlock.faces.yFace);
         }
-        if (blockPos.z > -(dims.z - 1) / 2 && (GetBlock(negZBlockPos) == 0 || Block.idToBlock[GetBlock(negZBlockPos)] is PlanesBlock) || blockPos.z == -(dims.z - 1) / 2)
+        if (blockPos.z > -halfExtent && (GetBlock(negZBlockPos) == 0 || Block.idToBlock[GetBlock(negZBlockPos)] is PlanesBlock) || blockPos.z == -halfExtent)
         {
             faces.Add(CubeBlock.faces.negZFace);
         }
-        if (blockPos.z < (dims.z - 1) / 2 && (GetBlock(zBlockPos) == 0 || Block.idToBlock[GetBlock(zBlockPos)] is PlanesBlock) || blockPos.z == (dims.z - 1) / 2)
+        if (blockPos.z < halfExtent && (GetBlock(zBlockPos) == 0 || Block.idToBlock[GetBlock(zBlockPos)] is PlanesBlock) || blockPos.z == halfExtent)
         {
             faces.Add(CubeBlock.faces.zFace);
         }

@@ -4,37 +4,23 @@ using UnityEngine;
 
 public class OakForestOakTreeNoise : Noise
 {
-    private FastNoiseLite cubic;
-    private FastNoiseLite simplex;
-    private FastNoiseLite perlin;
-    private FastNoiseLite fractal;
+    private FastNoiseLite perlinNoise;
+    private FastNoiseLite valueNoise;
+    private const float ValueFrequency = 0.05f;
     
-    private const float Frequency = 0.07f;
-    private const float CubicAmplitude = 2f;
-        
-        
-    public float GetNoise(Vector2 vector)
+    public override float GetNoise(Vector2 vector)
     {
-        return cubic.GetNoise(vector.x, vector.y) * CubicAmplitude * simplex.GetNoise(vector.x, vector.y) *
-                fractal.GetNoise(vector.x, vector.y) +
-                perlin.GetNoise(vector.x, vector.y);
+        return (valueNoise.GetNoise(vector.x, vector.y) + perlinNoise.GetNoise(vector.x, vector.y)) / 2f;
     }
 
     public OakForestOakTreeNoise()
     {
-        cubic = new FastNoiseLite();
-        cubic.SetNoiseType(FastNoiseLite.NoiseType.ValueCubic);
-        cubic.SetFrequency(Frequency);
-        
-        simplex = new FastNoiseLite();
-        simplex.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
-        simplex.SetFrequency(Frequency);
-        
-        perlin = new FastNoiseLite();
-        perlin.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
+        perlinNoise = new FastNoiseLite();
+        perlinNoise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
+        perlinNoise.SetFrequency(0.02f);
 
-        fractal = new FastNoiseLite();
-        fractal.SetNoiseType(FastNoiseLite.NoiseType.Value);
-        fractal.SetFractalType(FastNoiseLite.FractalType.Ridged);
+        valueNoise = new FastNoiseLite();
+        valueNoise.SetNoiseType(FastNoiseLite.NoiseType.Value);
+        valueNoise.SetFrequency(ValueFrequency);
     }
 }

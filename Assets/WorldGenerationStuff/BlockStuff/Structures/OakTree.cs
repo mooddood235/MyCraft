@@ -20,13 +20,14 @@ public class OakTree : Structure
         int leavesHeight = random.Next(LeavesMinHeight, LeavesMaxHeight);
 
         GenerateTrunk(startPos, treeHeight, blocks);
-        // GenerateLeaves(startPos, treeHeight, leavesHeight, blocks);
+        GenerateLeaves(startPos, treeHeight, leavesHeight, blocks);
         
         return blocks;
     }
 
     private static void GenerateLeaves(Vector3Int startPos, int treeHeight, int leavesHeight, List<KeyValuePair<Vector3Int, int>> blocks)
     {
+        // Top collection
         for (int x = -1; x <= 1; x++)
         {
             for (int z = -1; z <= 1; z++)
@@ -38,14 +39,30 @@ public class OakTree : Structure
                 }
             }
         }
-
-        for (int i = 0; i < leavesHeight - 1; i++)
+        // Second top collection
+        for (int x = -1; x <= 1; x++)
         {
-            for (int x = -1; x <= 1; x++)
+            for (int z = -1; z <= 1; z++)
             {
-                for (int z = -1; z <= 1; z++)
+                if ((x == 0 || z == 0 || random.Next(0, 2) == 1) && (x != 0 || z != 0))
                 {
-                    
+                    Vector3Int oakLeavesBlockPos = startPos + new Vector3Int(x, treeHeight - 2, z);
+                    blocks.Add(new KeyValuePair<Vector3Int, int>(oakLeavesBlockPos, oakLeaves));
+                }
+            }
+        }
+        // The bottom collections
+        for (int i = 0; i < leavesHeight - 2; i++)
+        {
+            for (int x = -2; x <= 2; x++)
+            {
+                for (int z = -2; z <= 2; z++)
+                {
+                    if (x != 0 || z != 0 && (Mathf.Abs(x) == 2 || Mathf.Abs(z) == 2) && random.Next(0, 2) == 1)
+                    {
+                        Vector3Int oakLeavesBlockPos = startPos + new Vector3Int(x, treeHeight - 1 - i, z);
+                        blocks.Add(new KeyValuePair<Vector3Int, int>(oakLeavesBlockPos, oakLeaves));
+                    }
                 }
             }
         }

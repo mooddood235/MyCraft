@@ -9,7 +9,7 @@ public class OakForestElevationNoise : Noise
     private const float Frequency = 0.04f;
     private const float Amplitude = 5;
     
-    public float GetNoise(Vector2 vector)
+    public override float GetNoise(Vector2 vector)
     {
         return noise.GetNoise(vector.x, vector.y) * Amplitude;
     }
