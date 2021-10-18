@@ -33,11 +33,11 @@ public abstract class Biome
         else return boundToBiome[boundWithSmallestMin];
     }
 
-    protected static int GetLerpedElevation(Vector2Int blockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks)
+    protected static int GetLerpedElevation(Vector2Int blockPos, Vector2Int chunkPos)
     {
         Vector2Int blockPosInWorldSpace = chunkPos * Chunk.dims.x + blockPos;
 
-        List<Chunk> adjacentChunks = GetAdjacentChunks(chunkPos, chunks);
+        List<Chunk> adjacentChunks = GetAdjacentChunks(chunkPos);
 
         float maxDist = Mathf.Sqrt(2f * Mathf.Pow((lerpRange + 1f) * Chunk.dims.x - 0.5f, 2));
         float sumOfWeights = 0f;
@@ -56,7 +56,7 @@ public abstract class Biome
         return Mathf.RoundToInt(weightedAverage);
     }
 
-    private static List<Chunk> GetAdjacentChunks(Vector2Int centreChunkPos, Dictionary<Vector2Int, Chunk> chunks)
+    private static List<Chunk> GetAdjacentChunks(Vector2Int centreChunkPos)
     {
         List<Chunk> adjacentChunks = new List<Chunk>();
 
@@ -65,20 +65,19 @@ public abstract class Biome
             for (int y = -lerpRange; y <= lerpRange; y++)
             {
                 Vector2Int chunkPos = centreChunkPos + new Vector2Int(x, y);
-                if (!chunks.ContainsKey(chunkPos)) chunks[chunkPos] = new Chunk(chunkPos);
-                adjacentChunks.Add(chunks[chunkPos]);
+                adjacentChunks.Add(Chunk.GetChunk(chunkPos));
             }
         }
         return adjacentChunks;
     }
 
-    public static List<KeyValuePair<Vector3Int, int>> GetBlocks(Vector2Int blockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks)
+    public static List<KeyValuePair<Vector3Int, int>> GetBlocks(Vector2Int blockPos, Vector2Int chunkPos)
     {
         Biome biome = GetBiome(chunkPos, new Vector3Int(blockPos.x, 0, blockPos.y));
-        return biome.ObjLevelGetBlocks(blockPos, chunkPos, chunks);
+        return biome.ObjLevelGetBlocks(blockPos, chunkPos);
     }
 
     abstract public float GetElevationNoise(Vector2 vector);
 
-    abstract public List<KeyValuePair<Vector3Int, int>> ObjLevelGetBlocks(Vector2Int surfaceBlockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks);
+    abstract public List<KeyValuePair<Vector3Int, int>> ObjLevelGetBlocks(Vector2Int surfaceBlockPos, Vector2Int chunkPos);
 }

@@ -14,7 +14,6 @@ public class WorldGenerator2 : MonoBehaviour
     private Vector2Int playerPosInChunkSpace = new Vector2Int();
     [SerializeField]
     private GameObject chunkObjPrefab;
-    private Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
     private List<Chunk> chunksToDespawn = new List<Chunk>();
     private List<Chunk> chunksToSpawn = new List<Chunk>();
     private Queue<GameObject> chunkObjPool = new Queue<GameObject>();
@@ -67,9 +66,9 @@ public class WorldGenerator2 : MonoBehaviour
             for (int y = -viewRadius; y <= viewRadius; y++)
             {
                 Vector2Int chunkPos = new Vector2Int(x, y);
-                chunks[chunkPos] = new Chunk(chunkPos);
-                chunks[chunkPos].Generate(chunks);
-                SpawnChunk(chunks[chunkPos]);
+                Chunk.SetChunk(chunkPos);
+                Chunk.GetChunk(chunkPos).Generate();
+                SpawnChunk(Chunk.GetChunk(chunkPos));
             }
         }
     }
@@ -80,7 +79,7 @@ public class WorldGenerator2 : MonoBehaviour
         {
             if (!chunk.IsGenerated())
             {
-                chunk.Generate(chunks);
+                chunk.Generate();
             }
         }
         generating = false;
@@ -190,11 +189,8 @@ public class WorldGenerator2 : MonoBehaviour
                 for (int y = playerPosInChunkSpace.y - viewRadius; y <= playerPosInChunkSpace.y + viewRadius; y++)
                 {
                     Vector2Int chunkPos = new Vector2Int(x, y);
-
-                    if (!chunks.ContainsKey(chunkPos)) chunks[chunkPos] = new Chunk(chunkPos);
-
-                    chunksToSpawn.Add(chunks[chunkPos]);
                     
+                    chunksToSpawn.Add(Chunk.GetChunk(chunkPos));
                 }
             }
         }
@@ -241,10 +237,7 @@ public class WorldGenerator2 : MonoBehaviour
                 {
                     Vector2Int chunkPos = new Vector2Int(x, y);
 
-                    if (!chunks.ContainsKey(chunkPos)) chunks[chunkPos] = new Chunk(chunkPos);
-
-                    chunksToSpawn.Add(chunks[chunkPos]);
-
+                    chunksToSpawn.Add(Chunk.GetChunk(chunkPos));
                 }
             }
         }
@@ -290,7 +283,7 @@ public class WorldGenerator2 : MonoBehaviour
                 {
                     Vector2Int chunkPos = new Vector2Int(x, y);
 
-                    chunksToDespawn.Add(chunks[chunkPos]);
+                    chunksToDespawn.Add(Chunk.GetChunk(chunkPos));
                 }
             }
         }
@@ -335,7 +328,7 @@ public class WorldGenerator2 : MonoBehaviour
                 for (int y = yStart; y <= yEnd; y++)
                 {
                     Vector2Int chunkPos = new Vector2Int(x, y);
-                    chunksToDespawn.Add(chunks[chunkPos]);               
+                    chunksToDespawn.Add(Chunk.GetChunk(chunkPos));               
                 }
             }
         }

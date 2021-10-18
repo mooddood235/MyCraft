@@ -11,7 +11,7 @@ public abstract class Structure
     }
 
     protected static void AddBlock(KeyValuePair<Vector3Int, int> positionToBlock, List<KeyValuePair<Vector3Int, int>> blocks,
-        Chunk chunk, Dictionary<Vector2Int, Chunk> chunks)
+        Chunk chunk)
     {
         Vector3Int pos = positionToBlock.Key;
         

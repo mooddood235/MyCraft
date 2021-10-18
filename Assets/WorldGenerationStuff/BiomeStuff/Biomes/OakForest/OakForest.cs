@@ -16,13 +16,13 @@ public class OakForest : Biome
         return elevationNoise.GetNoise(vector);
     }
 
-    public override List<KeyValuePair<Vector3Int, int>> ObjLevelGetBlocks(Vector2Int surfaceBlockPos, Vector2Int chunkPos, Dictionary<Vector2Int, Chunk> chunks)
+    public override List<KeyValuePair<Vector3Int, int>> ObjLevelGetBlocks(Vector2Int surfaceBlockPos, Vector2Int chunkPos)
     {
         List<KeyValuePair<Vector3Int, int>> blocks = new List<KeyValuePair<Vector3Int, int>>();
 
         Vector2Int surfaceBlockPosInWorldSpace = surfaceBlockPos + chunkPos;
         
-        int lerpedElevation = GetLerpedElevation(surfaceBlockPos, chunkPos, chunks);
+        int lerpedElevation = GetLerpedElevation(surfaceBlockPos, chunkPos);
         
         // Add grass block.
         Vector3Int grassPos = new Vector3Int(surfaceBlockPos.x, lerpedElevation, surfaceBlockPos.y);

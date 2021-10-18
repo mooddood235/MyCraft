@@ -20,7 +20,7 @@ public class OakTree : Structure
         int leavesHeight = random.Next(LeavesMinHeight, LeavesMaxHeight);
 
         GenerateTrunk(startPos, treeHeight, blocks);
-        GenerateLeaves(startPos, treeHeight, leavesHeight, blocks);
+        // GenerateLeaves(startPos, treeHeight, leavesHeight, blocks);
         
         return blocks;
     }

@@ -9,6 +9,7 @@ public class Chunk
      * Representation Invariants:
      *      dims.x == dims.z && all dimensions must be odd.
      */
+    private static Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
     public static Vector3Int dims = new Vector3Int(17, 61, 17);
     public static readonly int halfExtent = (dims.x - 1) / 2;
     public static readonly Range horizontalBounds = new Range(-(dims.x - 1) / 2, (dims.x - 1) / 2);
@@ -24,6 +25,27 @@ public class Chunk
     private Biome targetBiome;
     public static readonly Vector2 offsetToSouthWestCorner = new Vector2((dims.x - 1f) / 2f + 0.5f, (dims.z - 1f) / 2f + 0.5f);
 
+    public static void SetChunk(Vector2Int chunkPos, Chunk chunk)
+    {
+        chunks[chunkPos] = chunk;
+    }
+
+    public static void SetChunk(Vector2Int chunkPos)
+    {
+        chunks[chunkPos] = new Chunk(chunkPos);
+    }
+
+    public static Chunk GetChunk(Vector2Int chunkPos)
+    {
+        if (!ChunkExists(chunkPos)) SetChunk(chunkPos);
+        return chunks[chunkPos];
+    }
+
+    public static bool ChunkExists(Vector2Int chunkPos)
+    {
+        return chunks.ContainsKey(chunkPos);
+    }
+    
     public void SetChunkObj(GameObject chunkObj)
     {
         this.chunkObj = chunkObj;
@@ -59,14 +81,14 @@ public class Chunk
         return new Vector3Int(x, y, z);
     }
 
-    public void Generate(Dictionary<Vector2Int, Chunk> chunks)
+    public void Generate()
     {
-        GenerateBlocks(chunks);
+        GenerateBlocks();
         GenerateMesh();
 
         generated = true;
     }
-    public void GenerateBlocks(Dictionary<Vector2Int, Chunk> chunks)
+    public void GenerateBlocks()
     {
         int xRadius = halfExtent;
         int zRadius = halfExtent;
@@ -75,7 +97,7 @@ public class Chunk
         {
             for (int z = -zRadius; z <= zRadius; z++)
             {
-                foreach (KeyValuePair<Vector3Int, int> elevationToBlock in Biome.GetBlocks(new Vector2Int(x, z), pos, chunks))
+                foreach (KeyValuePair<Vector3Int, int> elevationToBlock in Biome.GetBlocks(new Vector2Int(x, z), pos))
                 {
                     SetBlock(elevationToBlock.Value, elevationToBlock.Key);
                 }
