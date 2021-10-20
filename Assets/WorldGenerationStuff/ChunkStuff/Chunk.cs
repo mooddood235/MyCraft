@@ -60,23 +60,39 @@ public class Chunk
         return pos;
     }
     
-    private void SetBlock(int block, Vector3Int blockPos)
+    public void SetBlock(int block, Vector3Int blockPos)
     {
         Vector3Int arrayCoords = GetArrayCoordsFromCentroidCoords(blockPos);
-        blocks[arrayCoords.x, arrayCoords.y, arrayCoords.z] = block;
+        try
+        {
+            blocks[arrayCoords.x, arrayCoords.y, arrayCoords.z] = block;
+        }
+        catch
+        {
+            Debug.LogWarning("Coordinate out of bounds: " + arrayCoords);
+        }
     }
 
-    private int GetBlock(Vector3Int blockPos)
+    public int GetBlock(Vector3Int blockPos)
     {
         Vector3Int arrayCoords = GetArrayCoordsFromCentroidCoords(blockPos);
         return blocks[arrayCoords.x, arrayCoords.y, arrayCoords.z];
     }
 
-    private Vector3Int GetArrayCoordsFromCentroidCoords(Vector3Int centroidCoords)
+    public static Vector3Int GetArrayCoordsFromCentroidCoords(Vector3Int centroidCoords)
     {
         int x = centroidCoords.x + halfExtent;
         int y = centroidCoords.y + (dims.y - 1) / 2;
         int z = centroidCoords.z + halfExtent;
+
+        return new Vector3Int(x, y, z);
+    }
+
+    public static Vector3Int GetCentroidCoordsFromArrayCoords(Vector3Int arrayCoords)
+    {
+        int x = arrayCoords.x - halfExtent;
+        int y = arrayCoords.y - (dims.y - 1) / 2;
+        int z = arrayCoords.z - halfExtent;
 
         return new Vector3Int(x, y, z);
     }

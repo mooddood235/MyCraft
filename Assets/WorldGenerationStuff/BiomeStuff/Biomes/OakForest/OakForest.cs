@@ -32,7 +32,7 @@ public class OakForest : Biome
         // Add oak tree.
         if (shouldSpawnOakTree && random.Next(0, 2) == 1)
         {
-            blocks.AddRange(OakTree.GenerateStructure(grassPos + Vector3Int.up));
+            blocks.AddRange(OakTree.GenerateStructure(grassPos + Vector3Int.up, chunkPos));
         }
 
         return blocks;

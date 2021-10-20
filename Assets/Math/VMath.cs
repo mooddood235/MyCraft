@@ -30,4 +30,17 @@ public class VMath
         return new Vector2Int(v1.x * v2.x, v1.y * v2.y);
     }
 
+    public static Vector3Int PyMod(Vector3Int vector, int value)
+    {
+        int xMod = vector.x % value;
+        int yMod = vector.y % value;
+        int zMod = vector.z % value;
+
+        if (vector.x < 0) xMod = value + xMod;
+        if (vector.y < 0) yMod = value + yMod;
+        if (vector.z < 0) zMod = value + zMod;
+
+        return new Vector3Int(xMod, yMod, zMod);
+    }
+    
 }
