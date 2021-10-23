@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions.Comparers;
 
 public class Chunk
 {
@@ -10,9 +11,10 @@ public class Chunk
      *      dims.x == dims.z && all dimensions must be odd.
      */
     private static Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
+    private static Stack<Chunk> chunksToRemesh = new Stack<Chunk>();
     public static Vector3Int dims = new Vector3Int(17, 61, 17);
-    public static readonly int halfExtent = (dims.x - 1) / 2;
-    public static readonly Range horizontalBounds = new Range(-(dims.x - 1) / 2, (dims.x - 1) / 2);
+    private static readonly int halfExtent = (dims.x - 1) / 2;
+    public static readonly Range horizontalBounds = new Range(-(dims.x - 1) / 2f, (dims.x - 1) / 2f);
     private Vector2Int pos;
     private GameObject chunkObj;
     private int[,,] blocks = new int[dims.x, dims.y, dims.z];
@@ -23,12 +25,9 @@ public class Chunk
     private bool meshGenerated;
     private bool generated;
     private Biome targetBiome;
-    public static readonly Vector2 offsetToSouthWestCorner = new Vector2((dims.x - 1f) / 2f + 0.5f, (dims.z - 1f) / 2f + 0.5f);
 
-    public static void SetChunk(Vector2Int chunkPos, Chunk chunk)
-    {
-        chunks[chunkPos] = chunk;
-    }
+    public static readonly Vector2 offsetToSouthWestCorner =
+        new Vector2((dims.x - 1f) / 2f + 0.5f, (dims.z - 1f) / 2f + 0.5f);
 
     public static void SetChunk(Vector2Int chunkPos)
     {
@@ -41,7 +40,7 @@ public class Chunk
         return chunks[chunkPos];
     }
 
-    public static bool ChunkExists(Vector2Int chunkPos)
+    private static bool ChunkExists(Vector2Int chunkPos)
     {
         return chunks.ContainsKey(chunkPos);
     }
@@ -265,10 +264,45 @@ public class Chunk
         return generated;
     }
 
+    public static void AddToRemeshStack(Chunk chunk)
+    {
+        chunksToRemesh.Push(chunk);
+    }
+
+    public static void RemeshChunksInRemeshStack()
+    {
+        List<Chunk> chunksRemeshed = new List<Chunk>();
+        
+        foreach (Chunk chunk in chunksToRemesh)
+        {
+            if (chunk.GetChunkObj() != null && !chunksRemeshed.Contains(chunk))
+            {
+                chunk.GenerateMesh();
+
+                chunk.SetMeshFromMeshData();
+                chunk.SetColliderMeshFromColliderMeshData();
+
+                chunk.chunkObj.GetComponent<MeshFilter>().mesh = chunk.GetMesh();
+                chunk.chunkObj.GetComponent<MeshCollider>().sharedMesh = chunk.GetColliderMesh();
+
+                chunksRemeshed.Add(chunk);
+            }
+        }
+        chunksToRemesh.Clear();
+    }
+    
+    public static Vector2Int GetChunkOffsetFromBlockPos(Vector3Int blockPos)
+    {
+        // Precondition: blockPos is in array coordinates.
+
+        return new Vector2Int(
+            Mathf.FloorToInt(blockPos.x / (float) dims.x),
+            Mathf.FloorToInt(blockPos.z / (float) dims.x));
+    }
+
     public Chunk(Vector2Int pos)
     {
         this.pos = pos;
         SetTargetBiome();
     }
-
 }

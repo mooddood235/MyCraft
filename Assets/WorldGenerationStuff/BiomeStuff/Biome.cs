@@ -30,7 +30,7 @@ public abstract class Biome
             }
         }
         if (biomeNoiseValue >= boundWithGreatestMax.y) return boundToBiome[boundWithGreatestMax];
-        else return boundToBiome[boundWithSmallestMin];
+        return boundToBiome[boundWithSmallestMin];
     }
 
     protected static int GetLerpedElevation(Vector2Int blockPos, Vector2Int chunkPos)

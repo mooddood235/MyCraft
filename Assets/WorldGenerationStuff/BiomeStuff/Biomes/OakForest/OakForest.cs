@@ -30,7 +30,7 @@ public class OakForest : Biome
 
         bool shouldSpawnOakTree = oakTreeRange.Within(oakTreeNoise.GetNoise(surfaceBlockPosInWorldSpace));
         // Add oak tree.
-        if (shouldSpawnOakTree && random.Next(0, 2) == 1)
+        if (shouldSpawnOakTree)
         {
             blocks.AddRange(OakTree.GenerateStructure(grassPos + Vector3Int.up, chunkPos));
         }

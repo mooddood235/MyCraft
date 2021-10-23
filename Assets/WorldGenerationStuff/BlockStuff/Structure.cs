@@ -24,25 +24,14 @@ public abstract class Structure
         }
         else
         {
-            blockPos = VMath.PyMod(Chunk.GetArrayCoordsFromCentroidCoords(blockPos), Chunk.dims.x);
-
-            Vector2Int otherChunkPos = chunkPos + GetOffsetFromBlockPos(positionToBlock.Key);
-
-            blockPos = Chunk.GetCentroidCoordsFromArrayCoords(blockPos);
+            blockPos = Chunk.GetArrayCoordsFromCentroidCoords(blockPos);
+            Vector2Int otherChunkPos = chunkPos + Chunk.GetChunkOffsetFromBlockPos(blockPos);
+            blockPos = Chunk.GetCentroidCoordsFromArrayCoords(VMath.PyMod(blockPos, Chunk.dims.x));
             blockPos.y = positionToBlock.Key.y;
 
-            Chunk.GetChunk(otherChunkPos).SetBlock(positionToBlock.Value, blockPos);
+            Chunk otherChunk = Chunk.GetChunk(otherChunkPos);
+            otherChunk.SetBlock(positionToBlock.Value, blockPos);
+            Chunk.AddToRemeshStack(otherChunk);
         }
-    }
-
-    private static Vector2Int GetOffsetFromBlockPos(Vector3Int blockPos)
-    {
-        float x = blockPos.x / 16f;
-        float z = blockPos.z / 16f;
-        
-        if (x > 0 && Mathf.FloorToInt(x) == x) x -= 1;
-        if (z > 0 && Mathf.FloorToInt(z) == z) z -= 1;
-
-        return new Vector2Int(Mathf.FloorToInt(x), Mathf.FloorToInt(z));
     }
 }

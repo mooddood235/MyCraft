@@ -349,6 +349,10 @@ PrefabInstance:
       value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 8526540949102607362, guid: ceeb9742ae2f50a4990f36f508d074fd, type: 3}
+      propertyPath: movementSpeed
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526540949102607362, guid: ceeb9742ae2f50a4990f36f508d074fd, type: 3}
       propertyPath: gravityAcceleration
       value: -39.2
       objectReference: {fileID: 0}

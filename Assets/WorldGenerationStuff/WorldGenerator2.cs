@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using UnityEngine;
 
@@ -10,8 +11,8 @@ public class WorldGenerator2 : MonoBehaviour
     private int viewRadius = 6;
     [SerializeField]
     private Transform playerTran;
-    private Vector2Int previousPlayerPosInChunkSpace = new Vector2Int();
-    private Vector2Int playerPosInChunkSpace = new Vector2Int();
+    private Vector2Int previousPlayerPosInChunkSpace;
+    private Vector2Int playerPosInChunkSpace;
     [SerializeField]
     private GameObject chunkObjPrefab;
     private List<Chunk> chunksToDespawn = new List<Chunk>();
@@ -19,9 +20,9 @@ public class WorldGenerator2 : MonoBehaviour
     private Queue<GameObject> chunkObjPool = new Queue<GameObject>();
     [SerializeField]
     private float timeBetweenChunkSpawning = 0.05f;
-    private bool despawning = false;
-    private bool spawning = false;
-    Thread generatorThread;
+    private bool despawning;
+    private bool spawning;
+    private Thread generatorThread;
     private bool generating = true;
 
     private void Start()
@@ -53,9 +54,10 @@ public class WorldGenerator2 : MonoBehaviour
         if (!generating)
         {
             generating = true;
-
+            
             StartCoroutine(DespawnChunks());
             StartCoroutine(SpawnChunks());
+            Chunk.RemeshChunksInRemeshStack();
         }
     }
 
@@ -66,11 +68,11 @@ public class WorldGenerator2 : MonoBehaviour
             for (int y = -viewRadius; y <= viewRadius; y++)
             {
                 Vector2Int chunkPos = new Vector2Int(x, y);
-                Chunk.SetChunk(chunkPos);
                 Chunk.GetChunk(chunkPos).Generate();
                 SpawnChunk(Chunk.GetChunk(chunkPos));
             }
         }
+        Chunk.RemeshChunksInRemeshStack();
     }
 
     private void GenerateChunks()
