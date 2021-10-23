@@ -7,13 +7,10 @@ using UnityEngine;
 public abstract class Structure
 {
     protected static System.Random random = new System.Random();
-    protected static List<KeyValuePair<Vector3Int, int>> GenerateStructure()
-    {
-        throw new System.NotImplementedException();
-    }
+    public abstract List<KeyValuePair<Vector3Int, int>> GenerateStructure(Vector3Int startPos, Vector2Int chunkPos);
 
     protected static void AddBlock(KeyValuePair<Vector3Int, int> positionToBlock, List<KeyValuePair<Vector3Int, int>> blocks,
-        Vector2Int chunkPos, bool checkOutOfBounds = false)
+        Vector2Int chunkPos, bool checkOutOfBounds = true)
     {
         Vector3Int blockPos = positionToBlock.Key;
         

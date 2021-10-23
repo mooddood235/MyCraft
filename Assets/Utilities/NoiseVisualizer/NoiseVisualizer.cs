@@ -7,10 +7,10 @@ public class NoiseVisualizer : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Vector2Int dimsInChunks;
-    private Noise noise = new OakForestOakTreeNoise();
+    private Noise noise = new OakForestWeedBlockNoise();
     private Texture2D texture;
-    
-    
+    [SerializeField] private Vector2 bounds;
+    [SerializeField] private bool useBounds;
     
     public void DisplayNoise()
     {
@@ -24,7 +24,12 @@ public class NoiseVisualizer : MonoBehaviour
             {
                 float noiseValue = noise.GetNoise(new Vector2(x, y));
                 Color color = new Color(noiseValue, noiseValue, noiseValue);
-                texture.SetPixel(x, y, color);
+                if (!useBounds) texture.SetPixel(x, y, color);
+                else
+                {
+                    if (noiseValue >= bounds.x && noiseValue <= bounds.y) texture.SetPixel(x, y, Color.white);
+                    else texture.SetPixel(x, y, Color.black);
+                }
             }
         }
         texture.Apply();
