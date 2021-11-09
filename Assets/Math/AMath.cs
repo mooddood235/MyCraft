@@ -24,4 +24,12 @@ public static class AMath
         }
         return newList;
     }
+
+    public static void MutatorAddVector(List<Vector3> list, Vector3 vectorToAdd)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            list.Add(list[i] + vectorToAdd);
+        }
+    }
 }

@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = System.Random;
 
 public class Range
 {
-    public readonly float min;
-    public readonly float max;
+    public float min;
+    public float max;
 
     public bool Within(float value)
     {
@@ -22,6 +23,4 @@ public class Range
         this.min = min;
         this.max = max;
     }
-    
-    
 }

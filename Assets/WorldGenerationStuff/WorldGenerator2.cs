@@ -87,7 +87,6 @@ public class WorldGenerator2 : MonoBehaviour
         generating = false;
     }
 
-
     private Vector2Int GetPlayerPosInChunkSpace()
     {
         return Vector2Int.RoundToInt(new Vector2(playerTran.position.x / Chunk.dims.x,

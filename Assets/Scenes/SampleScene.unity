@@ -191,7 +191,7 @@ MonoBehaviour:
   viewRadius: 10
   playerTran: {fileID: 5303011150828113892}
   chunkObjPrefab: {fileID: 1909839266076490692, guid: b6498240cafa6424c9df2024ceb3a3f9, type: 3}
-  timeBetweenChunkSpawning: 0.02
+  timeBetweenChunkSpawning: 0.1
 --- !u!28 &330436796
 Texture2D:
   m_ObjectHideFlags: 0
@@ -402,6 +402,10 @@ PrefabInstance:
     - target: {fileID: 5296179236589037558, guid: 0105da0fdf0f42e459be54c442231a02, type: 3}
       propertyPath: m_Name
       value: NoiseVisualizer
+      objectReference: {fileID: 0}
+    - target: {fileID: 5296179236589037558, guid: 0105da0fdf0f42e459be54c442231a02, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8751275912148233823, guid: 0105da0fdf0f42e459be54c442231a02, type: 3}
       propertyPath: m_Size.x
@@ -615,7 +619,7 @@ Sprite:
         format: 0
         dimension: 0
       m_DataSize: 80
-      _typelessdata: e17ae4bfe17ae43f00000000e17ae43fe17ae4bf00000000e17ae43fe17ae43f00000000e17ae4bfe17ae4bf000000006501000065010000040000002499e0ff645a0a00000000000100000009000000
+      _typelessdata: e17ae4bfe17ae43f00000000e17ae43fe17ae4bf00000000e17ae43fe17ae43f00000000e17ae4bfe17ae4bf00000000000000000000803f0000803f000000000000803f0000803f0000000000000000
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
@@ -682,13 +686,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3564612125098317172, guid: ceeb9742ae2f50a4990f36f508d074fd, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6990430277662256107, guid: ceeb9742ae2f50a4990f36f508d074fd, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6990430277662256107, guid: ceeb9742ae2f50a4990f36f508d074fd, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8526540949102607362, guid: ceeb9742ae2f50a4990f36f508d074fd, type: 3}
       propertyPath: jumpForce
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526540949102607362, guid: ceeb9742ae2f50a4990f36f508d074fd, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526540949102607362, guid: ceeb9742ae2f50a4990f36f508d074fd, type: 3}
+      propertyPath: isGrounded
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8526540949102607362, guid: ceeb9742ae2f50a4990f36f508d074fd, type: 3}
       propertyPath: jumpHeight
