@@ -133,27 +133,24 @@ public class CubeBlock : Block
         else return allFaceVerts;
     }
 
-    public static List<Vector3> GetVerts(Vector3Int blockPos, List<faces> blockFaces)
+    public static void GetVerts(Vector3Int blockPos, List<faces> cubeBlockFaces, List<Vector3> cubeBlockVerts)
     {
-        List<Vector3> blockVerts = new List<Vector3>();
-
-        foreach (faces face in blockFaces)
+        int startingIndex = cubeBlockVerts.Count;
+        
+        foreach (faces face in cubeBlockFaces)
         {
-            blockVerts.AddRange(FaceToVerts(face));
+            cubeBlockVerts.AddRange(FaceToVerts(face));
         }
 
-        return AMath.AddVector(blockVerts, blockPos);
+        AMath.MutatorAddVector(cubeBlockVerts, blockPos, startingIndex);
     }
 
-    public List<Vector2> GetUvs(List<faces> blockFaces)
+    public void GetUvs(List<faces> blockFaces, List<Vector2> uvs)
     {
-        List<Vector2> blockUvs = new List<Vector2>();
-
         foreach (faces face in blockFaces)
         {
-            blockUvs.AddRange(FaceToUv(face));
+            GetUvFromFace(face, uvs);
         }
-        return blockUvs;
     }
 
     private List<Vector2> FaceToUv(faces face)
@@ -164,5 +161,15 @@ public class CubeBlock : Block
         else if (face == faces.yFace) return yFaceUvs;
         else if (face == faces.negZFace) return negZFaceUvs;
         else return zFaceUvs;
+    }
+
+    private void GetUvFromFace(faces face, List<Vector2> uvs)
+    {
+        if (face == faces.negXFace) uvs.AddRange(negXFaceUvs);
+        else if (face == faces.xFace) uvs.AddRange(xFaceUvs);
+        else if (face == faces.negYFace) uvs.AddRange(negYFaceUvs);
+        else if (face == faces.yFace) uvs.AddRange(yFaceUvs);
+        else if (face == faces.negZFace) uvs.AddRange(negZFaceUvs);
+        else uvs.AddRange(zFaceUvs);
     }
 }

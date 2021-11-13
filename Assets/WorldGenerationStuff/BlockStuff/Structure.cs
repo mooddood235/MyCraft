@@ -7,6 +7,9 @@ using UnityEngine;
 public abstract class Structure
 {
     protected static System.Random random = new System.Random();
+    
+    protected List<KeyValuePair<Vector3Int, int>> tempBlocks = new List<KeyValuePair<Vector3Int, int>>();
+
     public abstract List<KeyValuePair<Vector3Int, int>> GenerateStructure(Vector3Int startPos, Vector2Int chunkPos);
 
     protected static void AddBlock(KeyValuePair<Vector3Int, int> positionToBlock, List<KeyValuePair<Vector3Int, int>> blocks,
@@ -28,7 +31,9 @@ public abstract class Structure
 
             Chunk otherChunk = Chunk.GetChunk(otherChunkPos);
             otherChunk.SetBlock(positionToBlock.Value, blockPos);
-            Chunk.AddToRemeshStack(otherChunk);
+            // otherChunk.Generate();
+            
+            if (otherChunk.GetChunkObj() != null) Chunk.AddToRemeshStack(otherChunk);
         }
     }
 }

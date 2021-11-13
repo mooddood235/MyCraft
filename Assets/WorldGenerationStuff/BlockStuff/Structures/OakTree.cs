@@ -14,15 +14,15 @@ public class OakTree : Structure
 
     public override List<KeyValuePair<Vector3Int, int>> GenerateStructure(Vector3Int startPos, Vector2Int chunkPos)
     {
-        List<KeyValuePair<Vector3Int, int>> blocks = new List<KeyValuePair<Vector3Int, int>>();
+        tempBlocks.Clear();
 
         int treeHeight = random.Next(TreeMinHeight, TreeMaxHeight + 1);
         int leavesHeight = random.Next(LeavesMinHeight, LeavesMaxHeight + 1);
 
-        GenerateTrunk(startPos, treeHeight, blocks);
-        GenerateLeaves(startPos, chunkPos, treeHeight, leavesHeight, blocks);
+        GenerateTrunk(startPos, treeHeight, tempBlocks);
+        GenerateLeaves(startPos, chunkPos, treeHeight, leavesHeight, tempBlocks);
         
-        return blocks;
+        return tempBlocks;
     }
 
     private static void GenerateLeaves(Vector3Int startPos, Vector2Int chunkPos, int treeHeight, int leavesHeight, List<KeyValuePair<Vector3Int, int>> blocks)

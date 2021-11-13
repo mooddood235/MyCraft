@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +18,23 @@ public class WorldGenerator2 : MonoBehaviour
     private GameObject chunkObjPrefab;
     private List<Chunk> chunksToDespawn = new List<Chunk>();
     private List<Chunk> chunksToSpawn = new List<Chunk>();
+    private HashSet<Chunk> chunksToRemesh = new HashSet<Chunk>();
     private Queue<GameObject> chunkObjPool = new Queue<GameObject>();
     [SerializeField]
-    private float timeBetweenChunkSpawning = 0.05f;
+    private float timeBetweenChunkSpawning = 1f;
+    [SerializeField]
+    private WaitForSeconds coroutineWaitTime;
     private bool despawning;
     private bool spawning;
+    private bool remeshing;
     private Thread generatorThread;
     private bool generating = true;
+    
+    private void Awake()
+    {
+        Chunk.chunksToRemesh = chunksToRemesh;
+        coroutineWaitTime = new WaitForSeconds(timeBetweenChunkSpawning);
+    }
 
     private void Start()
     {
@@ -35,19 +46,21 @@ public class WorldGenerator2 : MonoBehaviour
     {
         playerPosInChunkSpace = GetPlayerPosInChunkSpace();  
         
-        if (!despawning && !spawning && playerPosInChunkSpace != previousPlayerPosInChunkSpace)
+        if (!despawning && !spawning && !remeshing && playerPosInChunkSpace != previousPlayerPosInChunkSpace)
         {
             chunksToDespawn = new List<Chunk>();
             chunksToSpawn = new List<Chunk>();
 
             despawning = true;
             spawning = true;
+            remeshing = true;
 
             GetChunksToDespawn();
             GetChunksToSpawn();
 
             generatorThread = new Thread(GenerateChunks);
             generatorThread.Start();
+            // GenerateChunks();
 
             previousPlayerPosInChunkSpace = playerPosInChunkSpace;
         }
@@ -57,9 +70,10 @@ public class WorldGenerator2 : MonoBehaviour
             
             StartCoroutine(DespawnChunks());
             StartCoroutine(SpawnChunks());
-            Chunk.RemeshChunksInRemeshStack();
+            StartCoroutine(CoroutineApplyMeshesToChunksInRemeshStack());
         }
     }
+
 
     private void SpawnFirstChunks()
     {
@@ -72,9 +86,45 @@ public class WorldGenerator2 : MonoBehaviour
                 SpawnChunk(Chunk.GetChunk(chunkPos));
             }
         }
-        Chunk.RemeshChunksInRemeshStack();
+        RegenerateMeshesInRemeshStack();
+        ApplyMeshesToChunksInRemeshStack();
+    }
+    private void RegenerateMeshesInRemeshStack()
+    {
+        foreach (Chunk chunk in chunksToRemesh)
+        {
+            chunk.GenerateMesh();
+        }
+    }
+    private void ApplyMeshesToChunksInRemeshStack()
+    {
+        foreach (Chunk chunk in chunksToRemesh)
+        {
+            ApplyMeshToChunk(chunk);
+        }
+        chunksToRemesh.Clear();
     }
 
+    private IEnumerator CoroutineApplyMeshesToChunksInRemeshStack()
+    {
+        foreach (Chunk chunk in chunksToRemesh)
+        {
+            ApplyMeshToChunk(chunk);
+            yield return coroutineWaitTime;
+        }
+
+        remeshing = false;
+        chunksToRemesh.Clear();
+    }
+    private void ApplyMeshToChunk(Chunk chunk)
+    {
+        chunk.SetMeshFromMeshData();
+        chunk.SetColliderMeshFromColliderMeshData();
+
+        chunk.GetChunkObj().GetComponent<MeshFilter>().mesh = chunk.GetMesh();
+        chunk.GetChunkObj().GetComponent<MeshCollider>().sharedMesh = chunk.GetColliderMesh();
+    }
+    
     private void GenerateChunks()
     {
         foreach (Chunk chunk in chunksToSpawn)
@@ -84,6 +134,7 @@ public class WorldGenerator2 : MonoBehaviour
                 chunk.Generate();
             }
         }
+        RegenerateMeshesInRemeshStack();
         generating = false;
     }
 
@@ -98,7 +149,7 @@ public class WorldGenerator2 : MonoBehaviour
         foreach (Chunk chunk in chunksToSpawn)
         {
             SpawnChunk(chunk);
-            yield return new WaitForSeconds(timeBetweenChunkSpawning);
+            yield return coroutineWaitTime;
         }
         spawning = false;
     }
@@ -135,7 +186,7 @@ public class WorldGenerator2 : MonoBehaviour
         foreach (Chunk chunk in chunksToDespawn)
         {
             DespawnChunk(chunk);
-            yield return new WaitForSeconds(timeBetweenChunkSpawning);
+            yield return coroutineWaitTime;
         }
         despawning = false;
     }

@@ -38,13 +38,15 @@ public class PlanesBlock : Block
     [HideInInspector]
     public List<Vector2> uvs = new List<Vector2>();
 
-    public List<Vector2> GetUvs()
+    public void GetUvs(List<Vector2> blockUvs)
     {
-        return uvs;
+        blockUvs.AddRange(uvs);
     }
 
-    public static List<Vector3> GetVerts(Vector3Int blockPos)
+    public static void GetVerts(Vector3Int blockPos, List<Vector3> blockVerts)
     {
-        return AMath.AddVector(verts, blockPos);
+        int startingIndex = blockVerts.Count;
+        blockVerts.AddRange(verts);
+        AMath.MutatorAddVector(blockVerts, blockPos, startingIndex);
     }
 }

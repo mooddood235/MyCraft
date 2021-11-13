@@ -23,14 +23,15 @@ public class OakForest : Biome
 
     public override List<KeyValuePair<Vector3Int, int>> ObjLevelGetBlocks(Vector2Int surfaceBlockPos, Vector2Int chunkPos)
     {
-        List<KeyValuePair<Vector3Int, int>> blocks = new List<KeyValuePair<Vector3Int, int>>();
+        tempBlocks.Clear();
+        
         Vector2Int surfaceBlockPosInWorldSpace = surfaceBlockPos + chunkPos;
         
         int lerpedElevation = GetLerpedElevation(surfaceBlockPos, chunkPos);
         
         // Add grass block.
         Vector3Int grassPos = new Vector3Int(surfaceBlockPos.x, lerpedElevation, surfaceBlockPos.y);
-        blocks.Add(new KeyValuePair<Vector3Int, int>(grassPos, grassBlock));
+        tempBlocks.Add(new KeyValuePair<Vector3Int, int>(grassPos, grassBlock));
         
         // Add weed block.
         bool shouldSpawnWeedBlock =
@@ -39,7 +40,7 @@ public class OakForest : Biome
         if (shouldSpawnWeedBlock)
         {
             Vector3Int weedPos = grassPos + Vector3Int.up;
-            blocks.Add(new KeyValuePair<Vector3Int, int>(weedPos, weedBlock));
+            tempBlocks.Add(new KeyValuePair<Vector3Int, int>(weedPos, weedBlock));
         }
 
         // Add oak tree.
@@ -47,10 +48,10 @@ public class OakForest : Biome
                                   random.Next(0, 2) == 1;
         if (shouldSpawnOakTree)
         {
-            blocks.AddRange(oakTree.GenerateStructure(grassPos + Vector3Int.up, chunkPos));
+            tempBlocks.AddRange(oakTree.GenerateStructure(grassPos + Vector3Int.up, chunkPos));
         }
 
-        return blocks;
+        return tempBlocks;
     }
     
     

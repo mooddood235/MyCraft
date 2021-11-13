@@ -13,6 +13,10 @@ public abstract class Biome
     public static Vector2 boundWithGreatestMax = new Vector2(0, Mathf.NegativeInfinity);
     private static int lerpRange = 4;
 
+    private static List<Chunk> adjacentChunks = new List<Chunk>();
+    
+    protected List<KeyValuePair<Vector3Int, int>> tempBlocks = new List<KeyValuePair<Vector3Int, int>>();
+    
     protected System.Random random = new System.Random();
 
     public static Biome GetBiome(Vector2Int chunkPos, Vector3 blockPos)
@@ -58,7 +62,7 @@ public abstract class Biome
 
     private static List<Chunk> GetAdjacentChunks(Vector2Int centreChunkPos)
     {
-        List<Chunk> adjacentChunks = new List<Chunk>();
+        adjacentChunks.Clear();
 
         for (int x = -lerpRange; x <= lerpRange; x++)
         {

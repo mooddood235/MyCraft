@@ -12,23 +12,24 @@ public class Chunk
      *      dims.x == dims.z && all dimensions must be odd.
      */
     private static Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
-    private static Stack<Chunk> chunksToRemesh = new Stack<Chunk>();
     public static Vector3Int dims = new Vector3Int(17, 61, 17);
     private static readonly int halfExtent = (dims.x - 1) / 2;
     public static readonly Range horizontalBounds = new Range(-(dims.x - 1) / 2f, (dims.x - 1) / 2f);
     private Vector2Int pos;
     private GameObject chunkObj;
     private int[,,] blocks = new int[dims.x, dims.y, dims.z];
-    
+    public static HashSet<Chunk> chunksToRemesh;
     private MeshData meshData = new MeshData();
     private MeshData colliderMeshData = new MeshData();
-    private List<Vector3> tempMeshVerts = new List<Vector3>();
-    private List<int> tempMeshTris = new List<int>();
-    private List<Vector2> tempMeshUvs = new List<Vector2>();
-    private List<Vector3> tempColliderMeshVerts = new List<Vector3>();
-    private List<int> tempColliderMeshTris = new List<int>();
+    private static List<Vector3> tempMeshVerts = new List<Vector3>();
+    private static List<int> tempMeshTris = new List<int>();
+    private static List<Vector2> tempMeshUvs = new List<Vector2>();
+    private static List<Vector3> tempColliderMeshVerts = new List<Vector3>();
+    private static List<int> tempColliderMeshTris = new List<int>();
     private Mesh mesh;
     private Mesh colliderMesh;
+    private static List<Vector3> tempCubeBlockVerts = new List<Vector3>();
+    private static List<CubeBlock.faces> tempCubeBlockFaces = new List<CubeBlock.faces>();
     
     private bool meshGenerated;
     private bool generated;
@@ -36,7 +37,7 @@ public class Chunk
 
     public static readonly Vector2 offsetToSouthWestCorner =
         new Vector2((dims.x - 1f) / 2f + 0.5f, (dims.z - 1f) / 2f + 0.5f);
-
+    
     public static void SetChunk(Vector2Int chunkPos)
     {
         chunks[chunkPos] = new Chunk(chunkPos);
@@ -120,14 +121,20 @@ public class Chunk
         {
             for (int z = -zRadius; z <= zRadius; z++)
             {
-                foreach (KeyValuePair<Vector3Int, int> elevationToBlock in Biome.GetBlocks(new Vector2Int(x, z), pos))
+                List<KeyValuePair<Vector3Int, int>> posToBlock = Biome.GetBlocks(new Vector2Int(x, z), pos);
+
+                foreach (KeyValuePair<Vector3Int, int> elevationToBlock in posToBlock)
                 {
                     SetBlock(elevationToBlock.Value, elevationToBlock.Key);
                 }
             }
         }
+    }  
+    public static void AddToRemeshStack(Chunk chunk)
+    {
+        chunksToRemesh.Add(chunk);
     }
-    private void GenerateMesh()
+    public void GenerateMesh()
     {
         tempMeshVerts.Clear();
         tempMeshTris.Clear();
@@ -152,24 +159,27 @@ public class Chunk
                         
                         if (Block.idToBlock[GetBlock(blockPos)] is CubeBlock)
                         {
+                            tempCubeBlockFaces.Clear();
+                            tempCubeBlockVerts.Clear();
+                            
                             int colliderMeshTrisStart = tempColliderMeshVerts.Count;
 
-                            List<CubeBlock.faces> blockFaces = GetCubeBlockFaces(blockPos);
-                            List<Vector3> verts = CubeBlock.GetVerts(blockPos, blockFaces);
-                            tempMeshVerts.AddRange(verts);
-                            tempColliderMeshVerts.AddRange(verts);
+                            GetCubeBlockFaces(blockPos, tempCubeBlockFaces);
+                            CubeBlock.GetVerts(blockPos, tempCubeBlockFaces, tempCubeBlockVerts);
+                            tempMeshVerts.AddRange(tempCubeBlockVerts);
+                            tempColliderMeshVerts.AddRange(tempCubeBlockVerts);
 
                             CubeBlock block_ = (CubeBlock)Block.idToBlock[GetBlock(blockPos)];
-                            tempMeshUvs.AddRange(block_.GetUvs(blockFaces));
+                            block_.GetUvs(tempCubeBlockFaces, tempMeshUvs);
                             
                             MeshData.AddTris(meshTrisStart, tempMeshVerts.Count, tempMeshTris);
                             MeshData.AddTris(colliderMeshTrisStart, tempColliderMeshVerts.Count, tempColliderMeshTris);
                         }
                         else
                         {
-                            tempMeshVerts.AddRange(PlanesBlock.GetVerts(blockPos));
+                            PlanesBlock.GetVerts(blockPos, tempMeshVerts);
                             PlanesBlock block_ = (PlanesBlock)Block.idToBlock[GetBlock(blockPos)];
-                            tempMeshUvs.AddRange(block_.GetUvs());
+                            block_.GetUvs(tempMeshUvs);
                             
                             MeshData.AddDoubleSidedTris(meshTrisStart, tempMeshVerts.Count, tempMeshTris);
                         }
@@ -196,10 +206,8 @@ public class Chunk
         return targetBiome;
     }
 
-    private List<CubeBlock.faces> GetCubeBlockFaces(Vector3Int blockPos)
+    private void GetCubeBlockFaces(Vector3Int blockPos, List<CubeBlock.faces> cubeBlockFaces)
     {
-        List<CubeBlock.faces> faces = new List<CubeBlock.faces>();
-
         // Boolean expression logic for all if statements is the following:
         // If (the block is NOT at the side of the chunk AND (the block next to it is air or is a PlanesBlock)) OR (The block is at the side of the chunk)
 
@@ -214,30 +222,28 @@ public class Chunk
 
         if (blockPos.x > -halfExtent && (GetBlock(negXblockPos) == 0 || Block.idToBlock[GetBlock(negXblockPos)] is PlanesBlock) || blockPos.x == -halfExtent)
         {
-            faces.Add(CubeBlock.faces.negXFace);
+            cubeBlockFaces.Add(CubeBlock.faces.negXFace);
         }
         if (blockPos.x < halfExtent && (GetBlock(xBlockPos) == 0 || Block.idToBlock[GetBlock(xBlockPos)] is PlanesBlock) || blockPos.x == halfExtent)
         {
-            faces.Add(CubeBlock.faces.xFace);
+            cubeBlockFaces.Add(CubeBlock.faces.xFace);
         }
         if (blockPos.y > -(dims.y - 1) / 2 && (GetBlock(negYBlockPos) == 0 || Block.idToBlock[GetBlock(negYBlockPos)] is PlanesBlock) || blockPos.y == -(dims.y - 1) / 2)
         {
-            faces.Add(CubeBlock.faces.negYFace);
+            cubeBlockFaces.Add(CubeBlock.faces.negYFace);
         }
         if (blockPos.y < (dims.y - 1) / 2 && (GetBlock(yBlockPos) == 0 || Block.idToBlock[GetBlock(yBlockPos)] is PlanesBlock) || blockPos.y == (dims.y - 1) / 2)
         {
-            faces.Add(CubeBlock.faces.yFace);
+            cubeBlockFaces.Add(CubeBlock.faces.yFace);
         }
         if (blockPos.z > -halfExtent && (GetBlock(negZBlockPos) == 0 || Block.idToBlock[GetBlock(negZBlockPos)] is PlanesBlock) || blockPos.z == -halfExtent)
         {
-            faces.Add(CubeBlock.faces.negZFace);
+            cubeBlockFaces.Add(CubeBlock.faces.negZFace);
         }
         if (blockPos.z < halfExtent && (GetBlock(zBlockPos) == 0 || Block.idToBlock[GetBlock(zBlockPos)] is PlanesBlock) || blockPos.z == halfExtent)
         {
-            faces.Add(CubeBlock.faces.zFace);
+            cubeBlockFaces.Add(CubeBlock.faces.zFace);
         }
-
-        return faces; 
     }
 
     public Mesh GetMesh()
@@ -269,33 +275,6 @@ public class Chunk
     public bool IsGenerated()
     {
         return generated;
-    }
-
-    public static void AddToRemeshStack(Chunk chunk)
-    {
-        chunksToRemesh.Push(chunk);
-    }
-
-    public static void RemeshChunksInRemeshStack()
-    {
-        List<Chunk> chunksRemeshed = new List<Chunk>();
-        
-        foreach (Chunk chunk in chunksToRemesh)
-        {
-            if (chunk.GetChunkObj() != null && !chunksRemeshed.Contains(chunk))
-            {
-                chunk.GenerateMesh();
-
-                chunk.SetMeshFromMeshData();
-                chunk.SetColliderMeshFromColliderMeshData();
-
-                chunk.chunkObj.GetComponent<MeshFilter>().mesh = chunk.GetMesh();
-                chunk.chunkObj.GetComponent<MeshCollider>().sharedMesh = chunk.GetColliderMesh();
-
-                chunksRemeshed.Add(chunk);
-            }
-        }
-        chunksToRemesh.Clear();
     }
     
     public static Vector2Int GetChunkOffsetFromBlockPos(Vector3Int blockPos)

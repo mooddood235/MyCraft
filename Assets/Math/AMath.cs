@@ -25,11 +25,11 @@ public static class AMath
         return newList;
     }
 
-    public static void MutatorAddVector(List<Vector3> list, Vector3 vectorToAdd)
+    public static void MutatorAddVector(List<Vector3> list, Vector3 vectorToAdd, int startIndex)
     {
-        for (int i = 0; i < list.Count; i++)
+        for (int i = startIndex; i < list.Count; i++)
         {
-            list.Add(list[i] + vectorToAdd);
+            list[i] += vectorToAdd;
         }
     }
 }
