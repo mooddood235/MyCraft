@@ -21,7 +21,7 @@ public abstract class Biome
 
     public static Biome GetBiome(Vector2Int chunkPos, Vector3 blockPos)
     {
-        Vector2Int chunkPosInWorldSpace = chunkPos * Chunk.dims.x;
+        Vector2Int chunkPosInWorldSpace = chunkPos * Chunk.Dims.x;
         Vector2 blockPosInWorldSpace = chunkPosInWorldSpace + new Vector2(blockPos.x, blockPos.z);
 
         float biomeNoiseValue = biomeNoise.GetNoise(blockPosInWorldSpace.x, blockPosInWorldSpace.y);
@@ -39,17 +39,17 @@ public abstract class Biome
 
     protected static int GetLerpedElevation(Vector2Int blockPos, Vector2Int chunkPos)
     {
-        Vector2Int blockPosInWorldSpace = chunkPos * Chunk.dims.x + blockPos;
+        Vector2Int blockPosInWorldSpace = chunkPos * Chunk.Dims.x + blockPos;
 
         List<Chunk> adjacentChunks = GetAdjacentChunks(chunkPos);
 
-        float maxDist = Mathf.Sqrt(2f * Mathf.Pow((lerpRange + 1f) * Chunk.dims.x - 0.5f, 2));
+        float maxDist = Mathf.Sqrt(2f * Mathf.Pow((lerpRange + 1f) * Chunk.Dims.x - 0.5f, 2));
         float sumOfWeights = 0f;
         float weightedAverage = 0f;
 
         foreach (Chunk chunk_ in adjacentChunks)
         {
-            float distFromChunk = Vector2.Distance(chunk_.GetPos() * Chunk.dims.x - Chunk.offsetToSouthWestCorner, blockPosInWorldSpace);
+            float distFromChunk = Vector2.Distance(chunk_.GetPos() * Chunk.Dims.x - Chunk.offsetToSouthWestCorner, blockPosInWorldSpace);
             float weight = 1f - distFromChunk / maxDist;
             float elevation = chunk_.GetTargetBiome().GetElevationNoise(blockPosInWorldSpace);
 

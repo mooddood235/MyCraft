@@ -18,7 +18,7 @@ public abstract class Structure
         Vector3Int blockPos = positionToBlock.Key;
         
         if (checkOutOfBounds == false ||
-            Chunk.horizontalBounds.Within(blockPos.x) && Chunk.horizontalBounds.Within(blockPos.z))
+            Chunk.HorizontalBounds.Within(blockPos.x) && Chunk.HorizontalBounds.Within(blockPos.z))
         {
             blocks.Add(positionToBlock);
         }
@@ -26,7 +26,7 @@ public abstract class Structure
         {
             blockPos = Chunk.GetArrayCoordsFromCentroidCoords(blockPos);
             Vector2Int otherChunkPos = chunkPos + Chunk.GetChunkOffsetFromBlockPos(blockPos);
-            blockPos = Chunk.GetCentroidCoordsFromArrayCoords(VMath.PyMod(blockPos, Chunk.dims.x));
+            blockPos = Chunk.GetCentroidCoordsFromArrayCoords(VMath.PyMod(blockPos, Chunk.Dims.x));
             blockPos.y = positionToBlock.Key.y;
 
             Chunk otherChunk = Chunk.GetChunk(otherChunkPos);

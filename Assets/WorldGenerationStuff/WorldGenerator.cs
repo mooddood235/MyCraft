@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 public class WorldGenerator : MonoBehaviour
@@ -17,7 +18,7 @@ public class WorldGenerator : MonoBehaviour
 
     private void Awake()
     {
-        chunkPrefab.transform.localScale = Chunk.dims;
+        chunkPrefab.transform.localScale = Chunk.Dims;
     }
 
     private void Update()
@@ -129,8 +130,8 @@ public class WorldGenerator : MonoBehaviour
 
     private Vector2Int GetPlayerPosInChunkSpace()
     {
-        return Vector2Int.RoundToInt(new Vector2(playerTran.position.x / Chunk.dims.x,
-                                                 playerTran.position.z / Chunk.dims.z));
+        return Vector2Int.RoundToInt(new Vector2(playerTran.position.x / Chunk.Dims.x,
+                                                 playerTran.position.z / Chunk.Dims.z));
     }
 
     private bool ChunkWithinViewRadius(Vector2Int viewRadiusVector)
@@ -141,7 +142,7 @@ public class WorldGenerator : MonoBehaviour
     private GameObject SpawnChunkObj(Vector2Int spawnPos)
     {
         GameObject chunkObj;
-        Vector3 spawnPosInWorldSpace = VMath.V2ToV3(spawnPos) * Chunk.dims.x;
+        Vector3 spawnPosInWorldSpace = VMath.V2ToV3(spawnPos) * Chunk.Dims.x;
 
         if (chunkObjPool.Count == 0)
         {

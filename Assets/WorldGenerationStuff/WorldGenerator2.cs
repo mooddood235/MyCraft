@@ -22,7 +22,6 @@ public class WorldGenerator2 : MonoBehaviour
     private Queue<GameObject> chunkObjPool = new Queue<GameObject>();
     [SerializeField]
     private float timeBetweenChunkSpawning = 1f;
-    [SerializeField]
     private WaitForSeconds coroutineWaitTime;
     private bool despawning;
     private bool spawning;
@@ -140,8 +139,8 @@ public class WorldGenerator2 : MonoBehaviour
 
     private Vector2Int GetPlayerPosInChunkSpace()
     {
-        return Vector2Int.RoundToInt(new Vector2(playerTran.position.x / Chunk.dims.x,
-                                                 playerTran.position.z / Chunk.dims.z));
+        return Vector2Int.RoundToInt(new Vector2(playerTran.position.x / Chunk.Dims.x,
+                                                 playerTran.position.z / Chunk.Dims.z));
     }
 
     private IEnumerator SpawnChunks()
@@ -157,7 +156,7 @@ public class WorldGenerator2 : MonoBehaviour
     private void SpawnChunk(Chunk chunk)
     {
         GameObject chunkObj;
-        Vector3 spawnPosInWorldSpace = VMath.V2ToV3(chunk.GetPos()) * Chunk.dims.x - new Vector3(0f, Chunk.dims.y / 2f, 0f);
+        Vector3 spawnPosInWorldSpace = VMath.V2ToV3(chunk.GetPos()) * Chunk.Dims.x - new Vector3(0f, Chunk.Dims.y / 2f, 0f);
 
         if (chunkObjPool.Count == 0)
         {

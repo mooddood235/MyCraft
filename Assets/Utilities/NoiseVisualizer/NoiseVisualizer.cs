@@ -14,8 +14,8 @@ public class NoiseVisualizer : MonoBehaviour
     
     public void DisplayNoise()
     {
-        int width = dimsInChunks.x * Chunk.dims.x;
-        int height = dimsInChunks.y * Chunk.dims.z;
+        int width = dimsInChunks.x * Chunk.Dims.x;
+        int height = dimsInChunks.y * Chunk.Dims.z;
         texture = new Texture2D(width, height);
 
         for (int x = 0; x < width; x++)

@@ -12,12 +12,12 @@ public class Chunk
      *      dims.x == dims.z && all dimensions must be odd.
      */
     private static Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
-    public static Vector3Int dims = new Vector3Int(17, 61, 17);
-    private static readonly int halfExtent = (dims.x - 1) / 2;
-    public static readonly Range horizontalBounds = new Range(-(dims.x - 1) / 2f, (dims.x - 1) / 2f);
+    public static readonly Vector3Int Dims = new Vector3Int(17, 61, 17);
+    private static readonly int HalfExtent = (Dims.x - 1) / 2;
+    public static readonly Range HorizontalBounds = new Range(-(Dims.x - 1) / 2f, (Dims.x - 1) / 2f);
     private Vector2Int pos;
     private GameObject chunkObj;
-    private int[,,] blocks = new int[dims.x, dims.y, dims.z];
+    private int[,,] blocks = new int[Dims.x, Dims.y, Dims.z];
     public static HashSet<Chunk> chunksToRemesh;
     private MeshData meshData = new MeshData();
     private MeshData colliderMeshData = new MeshData();
@@ -36,7 +36,7 @@ public class Chunk
     private Biome targetBiome;
 
     public static readonly Vector2 offsetToSouthWestCorner =
-        new Vector2((dims.x - 1f) / 2f + 0.5f, (dims.z - 1f) / 2f + 0.5f);
+        new Vector2((Dims.x - 1f) / 2f + 0.5f, (Dims.z - 1f) / 2f + 0.5f);
     
     public static void SetChunk(Vector2Int chunkPos)
     {
@@ -89,18 +89,18 @@ public class Chunk
 
     public static Vector3Int GetArrayCoordsFromCentroidCoords(Vector3Int centroidCoords)
     {
-        int x = centroidCoords.x + halfExtent;
-        int y = centroidCoords.y + (dims.y - 1) / 2;
-        int z = centroidCoords.z + halfExtent;
+        int x = centroidCoords.x + HalfExtent;
+        int y = centroidCoords.y + (Dims.y - 1) / 2;
+        int z = centroidCoords.z + HalfExtent;
 
         return new Vector3Int(x, y, z);
     }
 
     public static Vector3Int GetCentroidCoordsFromArrayCoords(Vector3Int arrayCoords)
     {
-        int x = arrayCoords.x - halfExtent;
-        int y = arrayCoords.y - (dims.y - 1) / 2;
-        int z = arrayCoords.z - halfExtent;
+        int x = arrayCoords.x - HalfExtent;
+        int y = arrayCoords.y - (Dims.y - 1) / 2;
+        int z = arrayCoords.z - HalfExtent;
 
         return new Vector3Int(x, y, z);
     }
@@ -114,8 +114,8 @@ public class Chunk
     }
     public void GenerateBlocks()
     {
-        int xRadius = halfExtent;
-        int zRadius = halfExtent;
+        int xRadius = HalfExtent;
+        int zRadius = HalfExtent;
 
         for (int x = -xRadius; x <= xRadius; x++)
         {
@@ -142,9 +142,9 @@ public class Chunk
         tempColliderMeshVerts.Clear();
         tempColliderMeshTris.Clear();
         
-        int xRadius = halfExtent;
-        int yRadius = (dims.y - 1) / 2;
-        int zRadius = halfExtent;
+        int xRadius = HalfExtent;
+        int yRadius = (Dims.y - 1) / 2;
+        int zRadius = HalfExtent;
 
         for (int x = -xRadius; x <= xRadius; x++)
         {
@@ -197,7 +197,7 @@ public class Chunk
 
     private void SetTargetBiome()
     {
-        Vector3 southWestCorner = new Vector3(-(dims.x - 1f) / 2f - 0.5f, 0f, -(dims.z - 1f) / 2f - 0.5f);
+        Vector3 southWestCorner = new Vector3(-(Dims.x - 1f) / 2f - 0.5f, 0f, -(Dims.z - 1f) / 2f - 0.5f);
         targetBiome = Biome.GetBiome(pos, southWestCorner);
     }
 
@@ -220,27 +220,27 @@ public class Chunk
         Vector3Int negZBlockPos = blockPos + Vector3Int.back;
         Vector3Int zBlockPos = blockPos + Vector3Int.forward;
 
-        if (blockPos.x > -halfExtent && (GetBlock(negXblockPos) == 0 || Block.idToBlock[GetBlock(negXblockPos)] is PlanesBlock) || blockPos.x == -halfExtent)
+        if (blockPos.x > -HalfExtent && (GetBlock(negXblockPos) == 0 || Block.idToBlock[GetBlock(negXblockPos)] is PlanesBlock) || blockPos.x == -HalfExtent)
         {
             cubeBlockFaces.Add(CubeBlock.faces.negXFace);
         }
-        if (blockPos.x < halfExtent && (GetBlock(xBlockPos) == 0 || Block.idToBlock[GetBlock(xBlockPos)] is PlanesBlock) || blockPos.x == halfExtent)
+        if (blockPos.x < HalfExtent && (GetBlock(xBlockPos) == 0 || Block.idToBlock[GetBlock(xBlockPos)] is PlanesBlock) || blockPos.x == HalfExtent)
         {
             cubeBlockFaces.Add(CubeBlock.faces.xFace);
         }
-        if (blockPos.y > -(dims.y - 1) / 2 && (GetBlock(negYBlockPos) == 0 || Block.idToBlock[GetBlock(negYBlockPos)] is PlanesBlock) || blockPos.y == -(dims.y - 1) / 2)
+        if (blockPos.y > -(Dims.y - 1) / 2 && (GetBlock(negYBlockPos) == 0 || Block.idToBlock[GetBlock(negYBlockPos)] is PlanesBlock) || blockPos.y == -(Dims.y - 1) / 2)
         {
             cubeBlockFaces.Add(CubeBlock.faces.negYFace);
         }
-        if (blockPos.y < (dims.y - 1) / 2 && (GetBlock(yBlockPos) == 0 || Block.idToBlock[GetBlock(yBlockPos)] is PlanesBlock) || blockPos.y == (dims.y - 1) / 2)
+        if (blockPos.y < (Dims.y - 1) / 2 && (GetBlock(yBlockPos) == 0 || Block.idToBlock[GetBlock(yBlockPos)] is PlanesBlock) || blockPos.y == (Dims.y - 1) / 2)
         {
             cubeBlockFaces.Add(CubeBlock.faces.yFace);
         }
-        if (blockPos.z > -halfExtent && (GetBlock(negZBlockPos) == 0 || Block.idToBlock[GetBlock(negZBlockPos)] is PlanesBlock) || blockPos.z == -halfExtent)
+        if (blockPos.z > -HalfExtent && (GetBlock(negZBlockPos) == 0 || Block.idToBlock[GetBlock(negZBlockPos)] is PlanesBlock) || blockPos.z == -HalfExtent)
         {
             cubeBlockFaces.Add(CubeBlock.faces.negZFace);
         }
-        if (blockPos.z < halfExtent && (GetBlock(zBlockPos) == 0 || Block.idToBlock[GetBlock(zBlockPos)] is PlanesBlock) || blockPos.z == halfExtent)
+        if (blockPos.z < HalfExtent && (GetBlock(zBlockPos) == 0 || Block.idToBlock[GetBlock(zBlockPos)] is PlanesBlock) || blockPos.z == HalfExtent)
         {
             cubeBlockFaces.Add(CubeBlock.faces.zFace);
         }
@@ -282,8 +282,8 @@ public class Chunk
         // Precondition: blockPos is in array coordinates.
 
         return new Vector2Int(
-            Mathf.FloorToInt(blockPos.x / (float) dims.x),
-            Mathf.FloorToInt(blockPos.z / (float) dims.x));
+            Mathf.FloorToInt(blockPos.x / (float) Dims.x),
+            Mathf.FloorToInt(blockPos.z / (float) Dims.x));
     }
 
     public Chunk(Vector2Int pos)

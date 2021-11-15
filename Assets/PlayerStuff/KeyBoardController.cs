@@ -20,8 +20,6 @@ public class KeyBoardController : MonoBehaviour
     [SerializeField]
     private float groundCheckRadius;
     [SerializeField]
-    private LayerMask groundCheckMask;
-    [SerializeField]
     private bool isGrounded = false;
 
     private float keyboardX;
