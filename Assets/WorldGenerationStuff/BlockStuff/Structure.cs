@@ -31,9 +31,8 @@ public abstract class Structure
 
             Chunk otherChunk = Chunk.GetChunk(otherChunkPos);
             otherChunk.SetBlock(positionToBlock.Value, blockPos);
-            // otherChunk.Generate();
             
-            if (otherChunk.GetChunkObj() != null) Chunk.AddToRemeshStack(otherChunk);
+            if (otherChunk.IsGenerated()) Chunk.AddToRemeshStack(otherChunk);
         }
     }
 }

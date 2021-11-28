@@ -69,7 +69,6 @@ public class WorldGenerator2 : MonoBehaviour
             
             StartCoroutine(DespawnChunks());
             StartCoroutine(SpawnChunks());
-            StartCoroutine(CoroutineApplyMeshesToChunksInRemeshStack());
         }
     }
 
@@ -151,6 +150,7 @@ public class WorldGenerator2 : MonoBehaviour
             yield return coroutineWaitTime;
         }
         spawning = false;
+        StartCoroutine(CoroutineApplyMeshesToChunksInRemeshStack());
     }
 
     private void SpawnChunk(Chunk chunk)
@@ -168,12 +168,9 @@ public class WorldGenerator2 : MonoBehaviour
             chunkObj.transform.position = spawnPosInWorldSpace;
             chunkObj.SetActive(true);
         }
-
-        if (!chunk.MeshIsGenerated())
-        {
-            chunk.SetMeshFromMeshData();
-            chunk.SetColliderMeshFromColliderMeshData();
-        }
+        
+        chunk.SetMeshFromMeshData();
+        chunk.SetColliderMeshFromColliderMeshData();
 
         chunkObj.GetComponent<MeshFilter>().mesh = chunk.GetMesh();
         chunkObj.GetComponent<MeshCollider>().sharedMesh = chunk.GetColliderMesh();

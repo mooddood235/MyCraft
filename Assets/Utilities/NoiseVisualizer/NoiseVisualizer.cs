@@ -7,7 +7,7 @@ public class NoiseVisualizer : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Vector2Int dimsInChunks;
-    private Noise noise = new OakForestWeedBlockNoise();
+    private Noise noise = new BiomeNoise();
     private Texture2D texture;
     [SerializeField] private Vector2 bounds;
     [SerializeField] private bool useBounds;

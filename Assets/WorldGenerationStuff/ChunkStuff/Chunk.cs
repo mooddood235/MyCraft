@@ -267,11 +267,6 @@ public class Chunk
         colliderMesh = colliderMeshData.GetMesh();
     }
 
-    public bool MeshIsGenerated()
-    {
-        return meshGenerated;
-    }
-
     public bool IsGenerated()
     {
         return generated;

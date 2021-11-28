@@ -1,16 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Biome
 {
-    public static FastNoiseLite biomeNoise = new FastNoiseLite();
+    public static Noise biomeNoise = new BiomeNoise();
     public static Dictionary<Vector2, Biome> boundToBiome = new Dictionary<Vector2, Biome>()
     {
-        { new Vector2(-1f, 1f), new OakForest() },
+        { new Vector2(Mathf.NegativeInfinity, 0), new OakForest() },
+        { new Vector2(0, Mathf.Infinity), new Desert()}
     };
-    public static Vector2 boundWithSmallestMin = new Vector2(Mathf.Infinity, 0);
-    public static Vector2 boundWithGreatestMax = new Vector2(0, Mathf.NegativeInfinity);
     private static int lerpRange = 4;
 
     private static List<Chunk> adjacentChunks = new List<Chunk>();
@@ -24,7 +24,7 @@ public abstract class Biome
         Vector2Int chunkPosInWorldSpace = chunkPos * Chunk.Dims.x;
         Vector2 blockPosInWorldSpace = chunkPosInWorldSpace + new Vector2(blockPos.x, blockPos.z);
 
-        float biomeNoiseValue = biomeNoise.GetNoise(blockPosInWorldSpace.x, blockPosInWorldSpace.y);
+        float biomeNoiseValue = biomeNoise.GetNoise(blockPosInWorldSpace);
 
         foreach (Vector2 bound in boundToBiome.Keys)
         {
@@ -33,8 +33,8 @@ public abstract class Biome
                 return boundToBiome[bound];
             }
         }
-        if (biomeNoiseValue >= boundWithGreatestMax.y) return boundToBiome[boundWithGreatestMax];
-        return boundToBiome[boundWithSmallestMin];
+
+        throw new Exception("The biomeNoiseValue is not contained in any biome bounds!");
     }
 
     protected static int GetLerpedElevation(Vector2Int blockPos, Vector2Int chunkPos)
