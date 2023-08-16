@@ -33,3 +33,9 @@ MyCraft is a Minecraft clone written in Unity.
 
 # Executable
 The executable can be found under [releases](https://github.com/mooddood235/MyCraft/releases/tag/1.0).
+
+# Gallery 
+![Capture](https://github.com/mooddood235/MyCraft/assets/62807754/c87498ae-8652-4ab9-b1cd-6a7993b832b8)
+![3](https://github.com/mooddood235/MyCraft/assets/62807754/1d1f1c30-e0cc-4ca7-a645-3cbb73c8d235)
+![2](https://github.com/mooddood235/MyCraft/assets/62807754/3dd3f9cb-edd5-4281-a455-71eccd0aeaea)
+![4](https://github.com/mooddood235/MyCraft/assets/62807754/6106f9a3-35de-4df6-a683-ff50a7b6dd2e)
