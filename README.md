@@ -2,6 +2,11 @@
 MyCraft is a Minecraft clone written in Unity.
 
 # Features
+- Utilizes [HD render pipeline](https://unity.com/srp/High-Definition-Render-Pipeline).
+  - Shadows
+  - Ambient occlusion
+  - Skybox lighting
+  - Atmopsherics
 - Infinite terrain generation
 - Biomes
   - Forest and desert biomes
