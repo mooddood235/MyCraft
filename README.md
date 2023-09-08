@@ -6,7 +6,7 @@ MyCraft is a Minecraft clone written in Unity.
   - Shadows
   - Ambient occlusion
   - Skybox lighting
-  - Atmopsherics
+  - Atmospherics
 - Infinite terrain generation
 - Biomes
   - Forest and desert biomes
