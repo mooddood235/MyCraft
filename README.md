@@ -28,7 +28,7 @@ MyCraft is a Minecraft clone written in Unity.
 - Mouse for look
 
 # Build Instructions
-1. Open project in Unity version 2021.1.5, or another compatabile version.
+1. Open project in Unity version 2021.1.5, or another compatible version.
 2. Build through Unity.
 
 # Executable
